@@ -6,5 +6,11 @@ FactoryBot.define do
     trait :invalid do
       title { nil }
     end
+
+    factory :question_with_answers do
+      title { 'MyString2' }
+      body { 'MyText2' }
+      answers { [association(:answer)] }
+    end
   end
 end
