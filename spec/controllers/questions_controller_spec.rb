@@ -1,6 +1,30 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
+  describe 'GET #index' do
+    let(:questions) { create_list(:question, 3) }
+
+    before { get :index }
+
+    it 'populates an array of all questions' do
+      expect(assigns(:questions)).to match_array(questions)
+    end
+
+    it { is_expected.to render_template :index }
+  end
+
+  describe 'GET #show' do
+    subject(:question) { create(:question) }
+
+    before { get :show, params: { id: question } }
+
+    it 'assigns the requested question to @question' do
+      expect(assigns(:question)).to eq question
+    end
+
+    it { is_expected.to render_template :show }
+  end
+
   describe 'GET #new' do
     before { get :new }
 
