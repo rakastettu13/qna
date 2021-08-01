@@ -2,3 +2,13 @@ p
   = @question.title
 p
   = @question.body
+
+= render @question.answers
+
+= form_with model: [@question, @answer] do |form|
+  =form.label :body
+  br
+  =form.text_area :body
+  br
+
+  =form.submit 'Reply'

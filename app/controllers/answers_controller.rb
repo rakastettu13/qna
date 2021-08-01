@@ -1,16 +1,13 @@
 class AnswersController < ApplicationController
-  before_action :set_question, only: %i[new create]
-
-  def new
-    @answer = @question.answers.build
-  end
+  before_action :set_question, only: %i[create]
 
   def create
     @answer = @question.answers.build(answer_params)
     if @answer.save
-      redirect_to @answer
+      redirect_to @question, notice: 'Your answer has been sent successfully.'
     else
-      render :new
+      flash[:alert] = "Body can't be blank"
+      render 'questions/show'
     end
   end
 
