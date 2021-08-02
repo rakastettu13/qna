@@ -5,6 +5,7 @@ class AnswersController < ApplicationController
   expose :answer, parent: :question
 
   def create
+    answer.author = current_user
     if answer.save
       redirect_to question, notice: 'Your answer has been sent successfully.'
     else

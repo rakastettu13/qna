@@ -8,12 +8,14 @@ RSpec.feature 'Viewing a question with answers', type: :feature do
   scenario 'with question' do
     expect(page).to have_content question.title
     expect(page).to have_content question.body
+    expect(page).to have_content question.author.email
     expect(page).to have_content question.created_at
   end
 
   scenario 'with answers' do
     question.answers.each do |answer|
       expect(page).to have_content answer.body
+      expect(page).to have_content answer.author.email
       expect(page).to have_content answer.created_at
     end
   end

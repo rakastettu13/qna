@@ -6,6 +6,7 @@ class QuestionsController < ApplicationController
   expose :answer, -> { question.answers.build }
 
   def create
+    question.author = current_user
     if question.save
       redirect_to question, notice: 'Your question successfully created.'
     else

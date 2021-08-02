@@ -3,7 +3,8 @@ p
 p
   = question.body
 p
-  = question.created_at
+  = question.author.email
+  =< question.created_at
 
 = render question.answers
 
