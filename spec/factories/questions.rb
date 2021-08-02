@@ -10,7 +10,14 @@ FactoryBot.define do
     factory :question_with_answers do
       title { 'MyString2' }
       body { 'MyText2' }
-      answers { [association(:answer)] }
+
+      transient do
+        answers_count { 2 }
+      end
+
+      answers do
+        Array.new(answers_count) { association(:answer) }
+      end
     end
   end
 end
