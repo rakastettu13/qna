@@ -1,9 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  subject(:question) { create(:question) }
-
   describe 'POST #create' do
+    subject(:user) { create(:user) }
+
+    let(:question) { create(:question) }
+
+    before { sign_in(user) }
+
     context 'with valid attributes' do
       subject(:request_for_creation) do
         post :create, params: { question_id: question.id, answer: attributes_for(:answer) }
