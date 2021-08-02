@@ -5,6 +5,8 @@ p
 p
   = question.author.email
   =< question.created_at
+p
+  = link_to_delete(question)
 
 = render question.answers
 

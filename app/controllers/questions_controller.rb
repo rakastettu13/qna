@@ -15,6 +15,15 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def destroy
+    if question.author == current_user
+      question.destroy
+      redirect_to questions_path, notice: 'Your question successfully deleted.'
+    else
+      render :show
+    end
+  end
+
   private
 
   def question_params
