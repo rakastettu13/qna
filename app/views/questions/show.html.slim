@@ -1,11 +1,11 @@
 p
-  = @question.title
+  = question.title
 p
-  = @question.body
+  = question.body
 
-= render @question.answers
+= render question.answers
 
-= form_with model: [@question, @answer] do |form|
+= form_with model: [question, answer], local: true do |form|
   =form.label :body
   br
   =form.text_area :body

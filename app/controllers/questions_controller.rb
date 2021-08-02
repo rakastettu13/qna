@@ -1,22 +1,11 @@
 class QuestionsController < ApplicationController
-  def index
-    @questions = Question.all
-  end
-
-  def show
-    @question = Question.find(params[:id])
-    @answer = @question.answers.build
-  end
-
-  def new
-    @question = Question.new
-  end
+  expose :questions, -> { Question.all }
+  expose :question
+  expose :answer, -> { question.answers.build }
 
   def create
-    @question = Question.new(question_params)
-
-    if @question.save
-      redirect_to @question, notice: 'Your question successfully created.'
+    if question.save
+      redirect_to question, notice: 'Your question successfully created.'
     else
       flash[:alert] = "Title/Body can't be blank"
       render :new
