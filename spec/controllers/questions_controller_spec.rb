@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  subject(:user) { create(:user) }
+  let(:user) { create(:user) }
 
   before { sign_in(user) }
 

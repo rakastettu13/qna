@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  subject(:user) { create(:user) }
+  let(:user) { create(:user) }
 
   let(:question) { create(:question) }
 

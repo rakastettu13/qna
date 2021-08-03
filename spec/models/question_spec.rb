@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Question, type: :model do
-  context 'with associations' do
+  context 'with answers' do
     it { is_expected.to have_many(:answers).dependent(:destroy) }
   end
 

@@ -6,7 +6,7 @@ RSpec.feature 'Destroying the question', type: :feature do
   given(:question) { create(:question, author: user) }
   given!(:answer) { create(:answer, author: user, question: question) }
 
-  scenario 'Authorized user can delete the answer' do
+  scenario 'Authorized user tries to delete the answer' do
     sign_in(user)
     visit question_path(question)
     click_on 'Delete the answer'
@@ -14,7 +14,7 @@ RSpec.feature 'Destroying the question', type: :feature do
     expect(page).to have_content 'Your answer successfully deleted.'
   end
 
-  scenario 'Unauthorized user does not see the deletion link' do
+  scenario 'Unauthorized user tries to delete the answer' do
     sign_in(another_user)
     visit question_path(question)
 

@@ -10,17 +10,15 @@ RSpec.feature 'Creating question', type: :feature do
       click_on 'Ask question'
     end
 
-    scenario 'asks a question' do
+    scenario 'tries to ask a question' do
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'Some text'
       click_on 'Ask'
 
       expect(page).to have_content 'Your question successfully created.'
-      expect(page).to have_content 'Test question'
-      expect(page).to have_content 'Some text'
     end
 
-    scenario 'asks a question with errors' do
+    scenario 'tries to ask a question with errors' do
       click_on 'Ask'
 
       expect(page).to have_content "Title/Body can't be blank"

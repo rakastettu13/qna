@@ -3,21 +3,20 @@ require 'rails_helper'
 RSpec.feature 'Creating answer', type: :feature do
   given(:question) { create(:question) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user'  do
     given(:user) { create(:user) }
 
     background { sign_in(user) }
     background { visit question_path(question) }
 
-    scenario 'send an answer' do
+    scenario 'tries to send an answer' do
       fill_in 'Body', with: 'Some text'
       click_on 'Reply'
 
       expect(page).to have_content 'Your answer has been sent successfully.'
-      expect(page).to have_content 'Some text'
     end
 
-    scenario 'send an answer with errors' do
+    scenario 'tries to send an answer with errors' do
       click_on 'Reply'
 
       expect(page).to have_content "Body can't be blank"
@@ -25,7 +24,7 @@ RSpec.feature 'Creating answer', type: :feature do
   end
 
   describe 'Unauthenticated user' do
-    scenario 'send an answer' do
+    scenario 'tries to send an answer' do
       visit question_path(question)
       click_on 'Reply'
 
