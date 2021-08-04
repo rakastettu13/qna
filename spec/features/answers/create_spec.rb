@@ -14,6 +14,7 @@ RSpec.feature 'Creating answer', type: :feature do
       click_on 'Reply'
 
       expect(page).to have_content 'Your answer has been sent successfully.'
+      expect(find('.answer-body')).to have_content 'Some text'
     end
 
     scenario 'tries to send an answer with errors' do

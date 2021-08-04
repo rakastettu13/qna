@@ -16,6 +16,8 @@ RSpec.feature 'Creating question', type: :feature do
       click_on 'Ask'
 
       expect(page).to have_content 'Your question successfully created.'
+      expect(find('.question-title')).to have_content 'Test question'
+      expect(find('.question-body')).to have_content 'Some text'
     end
 
     scenario 'tries to ask a question with errors' do
