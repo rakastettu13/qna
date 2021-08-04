@@ -20,4 +20,10 @@ RSpec.feature 'Destroying the question', type: :feature do
 
     expect(page).to have_no_content 'Delete the answer'
   end
+
+  scenario 'Unauthenticated user tries to delete the answer' do
+    visit question_path(question)
+
+    expect(page).to have_no_content 'Delete the answer'
+  end
 end
