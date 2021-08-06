@@ -1,11 +1,9 @@
 module ApplicationHelper
   def link_to_delete(elem)
-    return unless elem.persisted? && elem.author == current_user
+    return unless elem.persisted? && current_user&.author_of?(elem)
 
-    elem_class = elem.class.to_s.downcase
-
-    link_to "Delete the #{elem_class}",
-            send("#{elem_class}_path".to_sym, id: elem),
+    link_to "Delete the #{elem.class.to_s.downcase}",
+            polymorphic_path(elem),
             method: :delete
   end
 end
