@@ -1,7 +1,8 @@
-p.answer-body
-  = answer.body
-p
-  = answer.author.email
-  =< answer.created_at
-p
-  = link_to_delete(answer)
+- if answer.persisted?
+  p.answer-body
+    = answer.body
+  p
+    = answer.author.email
+    =< answer.created_at
+  p
+    = link_to_delete(answer)

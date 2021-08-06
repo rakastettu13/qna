@@ -1,6 +1,6 @@
 module ApplicationHelper
   def link_to_delete(elem)
-    return unless elem.valid? && elem.author == current_user
+    return unless elem.persisted? && elem.author == current_user
 
     elem_class = elem.class.to_s.downcase
 

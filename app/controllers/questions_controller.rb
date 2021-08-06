@@ -10,7 +10,6 @@ class QuestionsController < ApplicationController
     if question.save
       redirect_to question, notice: 'Your question successfully created.'
     else
-      flash[:alert] = "Title/Body can't be blank"
       render :new
     end
   end
