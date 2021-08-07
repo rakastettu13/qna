@@ -10,9 +10,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'POST #create' do
     context 'with valid attributes' do
       subject(:request_for_creation) do
-        post :create, params: { question_id: question.id,
-                                author_id: user.id,
-                                answer: attributes_for(:answer) }
+        post :create, params: { question_id: question.id, answer: attributes_for(:answer) }
       end
 
       it 'saves a new answer with a foreign key to the question in the database' do
@@ -26,9 +24,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       subject(:request_for_creation) do
-        post :create, params: { question_id: question.id,
-                                author_id: user.id,
-                                answer: attributes_for(:answer, :invalid) }
+        post :create, params: { question_id: question.id, answer: attributes_for(:answer, :invalid) }
       end
 
       it 'does not save the answer' do

@@ -8,7 +8,7 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'POST #create' do
     context 'with valid attributes' do
       subject(:request_for_creation) do
-        post :create, params: { author: user, question: attributes_for(:question) }
+        post :create, params: { question: attributes_for(:question) }
       end
 
       it 'saves a new question in the database' do
@@ -22,7 +22,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with invalid attributes' do
       subject(:request_for_creation) do
-        post :create, params: { author: user, question: attributes_for(:question, :invalid) }
+        post :create, params: { question: attributes_for(:question, :invalid) }
       end
 
       it 'does not save the question' do
