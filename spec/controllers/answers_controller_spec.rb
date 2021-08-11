@@ -10,7 +10,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'POST #create' do
     context 'with valid attributes' do
       subject(:request_for_creation) do
-        post :create, params: { question_id: question.id, answer: attributes_for(:answer) }
+        post :create, params: { question_id: question.id, answer: attributes_for(:answer) }, format: :js
       end
 
       it 'saves a new answer with a foreign key to the question in the database' do
@@ -18,20 +18,20 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it do
-        expect(request_for_creation).to redirect_to question
+        expect(request_for_creation).to render_template :create
       end
     end
 
     context 'with invalid attributes' do
       subject(:request_for_creation) do
-        post :create, params: { question_id: question.id, answer: attributes_for(:answer, :invalid) }
+        post :create, params: { question_id: question.id, answer: attributes_for(:answer, :invalid) }, format: :js
       end
 
       it 'does not save the answer' do
         expect { request_for_creation }.not_to change(Answer, :count)
       end
 
-      it { expect(request_for_creation).to render_template 'questions/show' }
+      it { expect(request_for_creation).to render_template :create }
     end
   end
 

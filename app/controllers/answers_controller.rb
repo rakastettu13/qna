@@ -6,11 +6,7 @@ class AnswersController < ApplicationController
 
   def create
     answer.author = current_user
-    if answer.save
-      redirect_to question, notice: 'Your answer has been sent successfully.'
-    else
-      render 'questions/show'
-    end
+    answer.save
   end
 
   def destroy
