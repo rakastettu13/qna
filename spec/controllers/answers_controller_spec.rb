@@ -1,21 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  subject(:question) { create(:question) }
+  let(:user) { create(:user) }
 
-  describe 'GET #new' do
-    before { get :new, params: { question_id: question.id } }
+  let(:question) { create(:question) }
 
-    it 'assigns a new Answer to @answer' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'assigns @question to @answer.question' do
-      expect(assigns(:answer).question).to eq question
-    end
-
-    it { is_expected.to render_template :new }
-  end
+  before { sign_in(user) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
@@ -28,7 +18,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it do
-        expect(request_for_creation).to redirect_to assigns(:answer)
+        expect(request_for_creation).to redirect_to question
       end
     end
 
@@ -41,7 +31,36 @@ RSpec.describe AnswersController, type: :controller do
         expect { request_for_creation }.not_to change(Answer, :count)
       end
 
-      it { expect(request_for_creation).to render_template :new }
+      it { expect(request_for_creation).to render_template 'questions/show' }
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    subject(:deletion_request) { delete :destroy, params: { id: answer } }
+
+    context 'when the user is the author' do
+      let!(:answer) { create(:answer, author: user, question: question) }
+
+      it 'deletes the question from the database' do
+        expect { deletion_request }.to change(Answer, :count).by(-1)
+      end
+
+      it 'redirects to index' do
+        expect(deletion_request).to redirect_to question
+      end
+    end
+
+    context 'when the user is not the author' do
+      let(:another_user) { create(:user) }
+      let!(:answer) { create(:answer, author: another_user, question: question) }
+
+      it 'does not delete the question from the database' do
+        expect { deletion_request }.not_to change(Answer, :count)
+      end
+
+      it 'redirects to index' do
+        expect(deletion_request).to render_template 'questions/show'
+      end
     end
   end
 end

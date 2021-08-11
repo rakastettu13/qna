@@ -1,15 +1,25 @@
 class QuestionsController < ApplicationController
-  def new
-    @question = Question.new
-  end
+  before_action :authenticate_user!, except: %i[index show]
+
+  expose :questions, -> { Question.all }
+  expose :question
+  expose :answer, -> { question.answers.build }
 
   def create
-    @question = Question.new(question_params)
-
-    if @question.save
-      redirect_to @question
+    question.author = current_user
+    if question.save
+      redirect_to question, notice: 'Your question successfully created.'
     else
       render :new
+    end
+  end
+
+  def destroy
+    if current_user.author_of?(question)
+      question.destroy
+      redirect_to questions_path, notice: 'Your question successfully deleted.'
+    else
+      render :show
     end
   end
 
