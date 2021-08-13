@@ -8,4 +8,12 @@ table.questions
       | Body
     th
       | Count of answers
-  = render questions
+
+  - questions.each do |question|
+    tr
+      td
+        = question.title
+      td
+        = question.body
+      td
+        = question.answers.count

@@ -1,19 +1,18 @@
 = javascript_pack_tag "answer"
 
 - if answer.persisted?
+  div class="answer-#{answer.id}"
+    p.answer-body
+      = answer.body
+    p
+      = answer.author.email
+      =< answer.created_at
+      =< link_to_delete(answer)
+      =< link_to_edit(answer)
 
-div class="answer-#{answer.id}"
-  p.answer-body
-    = answer.body
-  p
-    = answer.author.email
-    =< answer.created_at
-    =< link_to_delete(answer)
-    =< link_to_edit(answer)
+    .answer-update-errors
 
-  .answer-update-errors
-
-  = form_with model: answer, class: "edit-#{answer.id} hidden", local: false do |form|
-    =form.label :body
-    =form.text_area :body
-    =form.submit 'Save'
+    = form_with model: answer, class: "edit-#{answer.id} hidden", local: false do |form|
+      =form.label :body
+      =form.text_area :body
+      =form.submit 'Save'

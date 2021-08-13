@@ -33,6 +33,32 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
+  describe 'PATCH #update' do
+    let(:question) { create(:question) }
+
+    context 'with valid attributes' do
+      before do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+
+        question.reload
+      end
+
+      it { expect(question.title).to eq 'new title' }
+      it { expect(question.body).to eq 'new body' }
+      it { expect(response).to render_template :update }
+    end
+
+    context 'with invalid attributes' do
+      subject(:update_request) do
+        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+      end
+
+      it { expect { update_request }.not_to change(question, :title) }
+      it { expect { update_request }.not_to change(question, :body) }
+      it { expect(update_request).to render_template :update }
+    end
+  end
+
   describe 'DELETE #destroy' do
     subject(:deletion_request) { delete :destroy, params: { id: question } }
 

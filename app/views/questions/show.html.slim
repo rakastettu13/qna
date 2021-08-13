@@ -1,12 +1,4 @@
-p.question-title
-  = question.title
-p.question-body
-  = question.body
-p
-  = question.author.email
-  =< question.created_at
-p
-  = link_to_delete(question)
+=render question
 
 .answers
   = render question.answers

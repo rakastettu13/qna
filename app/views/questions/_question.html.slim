@@ -1,7 +1,26 @@
-tr
-  td
+= javascript_pack_tag "question"
+
+.show-question
+  p.question-title
     = question.title
-  td
+  p.question-body
     = question.body
-  td
-    = question.answers.count
+  p
+    = question.author.email
+    =< question.created_at
+  p
+    = link_to_delete(question)
+    =< link_to_edit(question)
+
+  .question-update-errors
+
+  = form_with model: question, class: "edit-#{question.id} hidden", local: false do |form|
+    =form.label :title
+    =form.text_area :title
+    br
+
+    =form.label :body
+    =form.text_area :body
+    br
+
+    =form.submit 'Save'
