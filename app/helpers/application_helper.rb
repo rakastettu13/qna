@@ -4,7 +4,9 @@ module ApplicationHelper
 
     link_to "Delete the #{elem.class.to_s.downcase}",
             polymorphic_path(elem),
-            method: :delete
+            class: 'delete-link',
+            method: :delete,
+            remote: true
   end
 
   def link_to_edit(elem)

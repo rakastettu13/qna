@@ -60,31 +60,21 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    subject(:deletion_request) { delete :destroy, params: { id: answer } }
+    subject(:deletion_request) { delete :destroy, params: { id: answer }, format: :js }
 
     context 'when the user is the author' do
       let!(:answer) { create(:answer, author: user, question: question) }
 
-      it 'deletes the question from the database' do
-        expect { deletion_request }.to change(Answer, :count).by(-1)
-      end
-
-      it 'redirects to index' do
-        expect(deletion_request).to redirect_to question
-      end
+      it { expect { deletion_request }.to change(Answer, :count).by(-1) }
+      it { expect(deletion_request).to render_template :destroy }
     end
 
     context 'when the user is not the author' do
       let(:another_user) { create(:user) }
       let!(:answer) { create(:answer, author: another_user, question: question) }
 
-      it 'does not delete the question from the database' do
-        expect { deletion_request }.not_to change(Answer, :count)
-      end
-
-      it 'redirects to index' do
-        expect(deletion_request).to render_template 'questions/show'
-      end
+      it { expect { deletion_request }.not_to change(Answer, :count) }
+      it { expect(deletion_request).to render_template :destroy }
     end
   end
 end
