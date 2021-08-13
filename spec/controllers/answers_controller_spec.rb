@@ -17,9 +17,7 @@ RSpec.describe AnswersController, type: :controller do
         expect { request_for_creation }.to change(question.answers, :count).by(1)
       end
 
-      it do
-        expect(request_for_creation).to render_template :create
-      end
+      it { expect(request_for_creation).to render_template :create }
     end
 
     context 'with invalid attributes' do
@@ -32,6 +30,32 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it { expect(request_for_creation).to render_template :create }
+    end
+  end
+
+  describe 'PATCH #update' do
+    let(:answer) { create(:answer, question: question) }
+
+    context 'with valid attributes' do
+      before do
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+      end
+
+      it 'changes answer body' do
+        answer.reload
+        expect(answer.body).to eq 'new body'
+      end
+
+      it { expect(response).to render_template :update }
+    end
+
+    context 'with invalid attributes' do
+      subject(:update_request) do
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+      end
+
+      it { expect { update_request }.not_to change(answer, :body) }
+      it { expect(update_request).to render_template :update }
     end
   end
 
