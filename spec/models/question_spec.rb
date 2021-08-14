@@ -13,4 +13,22 @@ RSpec.describe Question, type: :model do
     it { is_expected.to validate_presence_of :title }
     it { is_expected.to validate_presence_of :body }
   end
+
+  describe '#best_answer' do
+    subject { answer }
+
+    let(:question) { create(:question) }
+
+    context 'with best answer' do
+      let(:answer) { create(:answer, question: question, best: true) }
+
+      it { is_expected.to eql(question.best_answer) }
+    end
+
+    context 'without best answer' do
+      let(:answer) { create(:answer, question: question) }
+
+      it { is_expected.not_to eql(question.best_answer) }
+    end
+  end
 end

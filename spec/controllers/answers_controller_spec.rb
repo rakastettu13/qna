@@ -77,4 +77,31 @@ RSpec.describe AnswersController, type: :controller do
       it { expect(deletion_request).to render_template :destroy }
     end
   end
+
+  describe 'PATCH #best' do
+    before { patch :best, params: { id: answer }, format: :js }
+
+    context 'when the user is the author of question' do
+      let!(:question) { create(:question, author: user) }
+      let!(:answer) { create(:answer, question: question) }
+
+      it {
+        answer.reload
+        expect(answer.best).to be_truthy
+      }
+
+      it { expect(response).to render_template :best }
+    end
+
+    context 'when the user is not the author of question' do
+      let!(:answer) { create(:answer, question: question) }
+
+      it {
+        answer.reload
+        expect(answer.best).to be_falsy
+      }
+
+      it { expect(response).to render_template :best }
+    end
+  end
 end

@@ -2,6 +2,9 @@
 
 - if answer.persisted?
   div class="answer-#{answer.id}"
+    - if answer.best
+        = 'Best answer'
+
     p.answer-body
       = answer.body
     p
@@ -9,6 +12,10 @@
       =< answer.created_at
       =< link_to_delete(answer)
       =< link_to_edit(answer)
+
+    - unless answer.best
+      p
+        = link_to_best(answer)
 
     .answer-update-errors
 
