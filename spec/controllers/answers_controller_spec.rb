@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
+  let(:another_user) { create(:user) }
 
   let(:question) { create(:question) }
 
@@ -34,14 +35,12 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    let(:answer) { create(:answer, question: question) }
+    let(:answer) { create(:answer, body: 'answer body', question: question, author: user) }
 
-    context 'with valid attributes' do
-      before do
-        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
-      end
+    context 'when author tries to update the answer with valid attributes' do
+      before { patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js }
 
-      it 'changes answer body' do
+      it do
         answer.reload
         expect(answer.body).to eq 'new body'
       end
@@ -49,13 +48,28 @@ RSpec.describe AnswersController, type: :controller do
       it { expect(response).to render_template :update }
     end
 
-    context 'with invalid attributes' do
-      subject(:update_request) do
-        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+    context 'when author tries to update the answer with invalid attributes' do
+      before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js }
+
+      it do
+        answer.reload
+        expect(answer.body).to eq 'answer body'
       end
 
-      it { expect { update_request }.not_to change(answer, :body) }
-      it { expect(update_request).to render_template :update }
+      it { expect(response).to render_template :update }
+    end
+
+    context 'when another user tries to update the answer' do
+      let(:answer) { create(:answer, body: 'answer body', question: question, author: another_user) }
+
+      before { patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js }
+
+      it do
+        answer.reload
+        expect(answer.body).to eq 'answer body'
+      end
+
+      it { expect(response).to render_template :update }
     end
   end
 
@@ -70,7 +84,6 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'when the user is not the author' do
-      let(:another_user) { create(:user) }
       let!(:answer) { create(:answer, author: another_user, question: question) }
 
       it { expect { deletion_request }.not_to change(Answer, :count) }
@@ -85,10 +98,10 @@ RSpec.describe AnswersController, type: :controller do
       let!(:question) { create(:question, author: user) }
       let!(:answer) { create(:answer, question: question) }
 
-      it {
+      it do
         answer.reload
         expect(answer.best).to be_truthy
-      }
+      end
 
       it { expect(response).to render_template :best }
     end
@@ -96,10 +109,10 @@ RSpec.describe AnswersController, type: :controller do
     context 'when the user is not the author of question' do
       let!(:answer) { create(:answer, question: question) }
 
-      it {
+      it do
         answer.reload
         expect(answer.best).to be_falsy
-      }
+      end
 
       it { expect(response).to render_template :best }
     end

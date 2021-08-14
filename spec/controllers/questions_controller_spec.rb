@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
+  let(:another_user) { create(:user) }
 
   before { sign_in(user) }
 
@@ -34,9 +35,9 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    let(:question) { create(:question) }
+    let(:question) { create(:question, author: user, title: 'title', body: 'body') }
 
-    context 'with valid attributes' do
+    context 'when author tries to update the question with valid attributes' do
       before do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
 
@@ -48,14 +49,30 @@ RSpec.describe QuestionsController, type: :controller do
       it { expect(response).to render_template :update }
     end
 
-    context 'with invalid attributes' do
-      subject(:update_request) do
+    context 'when author tries to update the question with invalid attributes' do
+      before do
         patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+
+        question.reload
       end
 
-      it { expect { update_request }.not_to change(question, :title) }
-      it { expect { update_request }.not_to change(question, :body) }
-      it { expect(update_request).to render_template :update }
+      it { expect(question.title).to eq 'title' }
+      it { expect(question.body).to eq 'body' }
+      it { expect(response).to render_template :update }
+    end
+
+    context 'when another user tries to update the question' do
+      let(:question) { create(:question, author: another_user, title: 'title', body: 'body') }
+
+      before do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+
+        question.reload
+      end
+
+      it { expect(question.title).to eq 'title' }
+      it { expect(question.body).to eq 'body' }
+      it { expect(response).to render_template :update }
     end
   end
 
@@ -75,7 +92,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'when the user is not the author' do
-      let(:another_user) { create(:user) }
       let!(:question) { create(:question, author: another_user) }
 
       it 'does not delete the question from the database' do
