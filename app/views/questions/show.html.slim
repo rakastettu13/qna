@@ -1,10 +1,6 @@
 =render question
 
-.best_answer
-  - if question.best_answer
-    = render question.best_answer
-
 .answers
-  = render question.answers.excluding(question.best_answer)
+  = render question.answers
 
 = render 'answers/form'

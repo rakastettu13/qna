@@ -9,13 +9,15 @@ RSpec.feature 'Best answer', type: :feature do
   given!(:answer) { create(:answer, question: question) }
 
   describe 'Authorized user', js: true do
-    given!(:another_answer) { create(:answer, question: question) }
+    given!(:another_answer) { create(:answer, body: 'another answer body', question: question) }
 
     background { sign_in(user) }
     background { visit question_path(question) }
 
     scenario 'tries to choose the best answer' do
       within ".answer-#{answer.id}" do
+        expect(page).to have_no_content 'Best answer'
+
         click_on 'Best'
 
         expect(page).to have_content 'Best answer'
@@ -28,12 +30,18 @@ RSpec.feature 'Best answer', type: :feature do
         click_on 'Best'
       end
 
+      expect(find('.answer-body', match: :first)).to have_content answer.body
+      expect(find('.answer-body', match: :first)).to have_no_content another_answer.body
+
       within ".answer-#{another_answer.id}" do
         click_on 'Best'
 
         expect(page).to have_content 'Best answer'
         expect(page).to have_no_link 'Best'
       end
+
+      expect(find('.answer-body', match: :first)).to have_content another_answer.body
+      expect(find('.answer-body', match: :first)).to have_no_content answer.body
 
       within ".answer-#{answer.id}" do
         expect(page).to have_no_content 'Best answer'
