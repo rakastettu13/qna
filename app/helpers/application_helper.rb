@@ -26,4 +26,14 @@ module ApplicationHelper
             method: :patch,
             remote: true
   end
+
+  def user_links
+    if current_user
+      concat link_to 'Log out', destroy_user_session_path, method: :delete
+    else
+      concat link_to 'Log in', new_user_session_path
+      concat ' '
+      concat link_to 'Sign up', new_user_registration_path
+    end
+  end
 end
