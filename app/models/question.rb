@@ -9,4 +9,11 @@ class Question < ApplicationRecord
   def best_answer
     answers.find_by(best: true)
   end
+
+  def update_best_answer(answer)
+    transaction do
+      best_answer&.update!(best: false)
+      answer.update!(best: true)
+    end
+  end
 end

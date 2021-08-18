@@ -18,12 +18,7 @@ class AnswersController < ApplicationController
   end
 
   def best
-    return unless current_user.author_of?(question)
-
-    answer.transaction do
-      question.best_answer&.update!(best: false)
-      answer.update!(best: true)
-    end
+    question.update_best_answer(answer) if current_user.author_of?(question)
   end
 
   private
