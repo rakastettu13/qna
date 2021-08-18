@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
+  let(:another_user) { create(:user) }
 
   before { sign_in(user) }
 
@@ -33,6 +34,48 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
+  describe 'PATCH #update' do
+    let(:question) { create(:question, author: user, title: 'title', body: 'body') }
+
+    context 'when author tries to update the question with valid attributes' do
+      before do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+
+        question.reload
+      end
+
+      it { expect(question.title).to eq 'new title' }
+      it { expect(question.body).to eq 'new body' }
+      it { expect(response).to render_template :update }
+    end
+
+    context 'when author tries to update the question with invalid attributes' do
+      before do
+        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+
+        question.reload
+      end
+
+      it { expect(question.title).to eq 'title' }
+      it { expect(question.body).to eq 'body' }
+      it { expect(response).to render_template :update }
+    end
+
+    context 'when another user tries to update the question' do
+      let(:question) { create(:question, author: another_user, title: 'title', body: 'body') }
+
+      before do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+
+        question.reload
+      end
+
+      it { expect(question.title).to eq 'title' }
+      it { expect(question.body).to eq 'body' }
+      it { expect(response).to render_template :update }
+    end
+  end
+
   describe 'DELETE #destroy' do
     subject(:deletion_request) { delete :destroy, params: { id: question } }
 
@@ -49,7 +92,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'when the user is not the author' do
-      let(:another_user) { create(:user) }
       let!(:question) { create(:question, author: another_user) }
 
       it 'does not delete the question from the database' do

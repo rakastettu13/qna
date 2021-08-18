@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.feature 'Creating answer', type: :feature do
   given(:question) { create(:question) }
 
-  describe 'Authenticated user'  do
+  describe 'Authenticated user', js: true do
     given(:user) { create(:user) }
 
     background { sign_in(user) }
@@ -13,7 +13,6 @@ RSpec.feature 'Creating answer', type: :feature do
       fill_in 'Body', with: 'Some text'
       click_on 'Reply'
 
-      expect(page).to have_content 'Your answer has been sent successfully.'
       expect(find('.answer-body')).to have_content 'Some text'
     end
 

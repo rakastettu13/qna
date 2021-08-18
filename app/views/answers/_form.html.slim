@@ -1,4 +1,6 @@
-= form_with model: [question, answer], local: true do |form|
+.answer-create-errors
+
+= form_with model: [question, answer], class: 'new-answer', local: false do |form|
   =form.label :body
   br
   =form.text_area :body
