@@ -1,30 +1,21 @@
 module ApplicationHelper
-  def link_to_delete(elem)
-    return unless elem.persisted? && current_user&.author_of?(elem)
+  def link_to_delete(resource)
+    return unless resource.persisted? && current_user&.author_of?(resource)
 
-    link_to "Delete the #{elem.class.to_s.downcase}",
-            polymorphic_path(elem),
+    link_to "Delete the #{resource.class.to_s.downcase}",
+            polymorphic_path(resource),
             class: 'delete-link',
             method: :delete,
             remote: true
   end
 
-  def link_to_edit(elem)
-    return unless elem.persisted? && current_user&.author_of?(elem)
+  def link_to_edit(resource)
+    return unless resource.persisted? && current_user&.author_of?(resource)
 
-    link_to "Edit the #{elem.class.to_s.downcase}",
+    link_to "Edit the #{resource.class.to_s.downcase}",
             '#',
             class: 'edit-link',
-            data: { id: elem.id }
-  end
-
-  def link_to_best(answer)
-    return unless answer.persisted? && current_user&.author_of?(answer.question)
-
-    link_to 'Best',
-            best_answer_path(answer),
-            method: :patch,
-            remote: true
+            data: { id: resource.id }
   end
 
   def links_to_files(resource)
