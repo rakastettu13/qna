@@ -7,6 +7,8 @@
 
     p.answer-body
       = answer.body
+    p.answer-files
+      - links_to_files(answer)
     p
       = answer.author.email
       =< answer.created_at

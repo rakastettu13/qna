@@ -1,12 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
-  context 'with question' do
+  describe 'Associations' do
     it { is_expected.to belong_to :question }
-  end
-
-  context 'with author' do
     it { is_expected.to belong_to(:author).class_name('User') }
+
+    it 'is expected to have many attached files' do
+      expect(described_class.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
+    end
   end
 
   context 'with validations' do

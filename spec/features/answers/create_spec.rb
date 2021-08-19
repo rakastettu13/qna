@@ -21,6 +21,17 @@ RSpec.feature 'Creating answer', type: :feature do
 
       expect(page).to have_content "Body can't be blank"
     end
+
+    scenario 'tries to ask a answer with attached file' do
+      fill_in 'Body', with: 'Some text'
+
+      attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+
+      click_on 'Reply'
+
+      expect(find('.answer-files')).to have_link 'rails_helper.rb'
+      expect(find('.answer-files')).to have_link 'spec_helper.rb'
+    end
   end
 
   describe 'Unauthenticated user' do
