@@ -25,4 +25,8 @@
     =form.text_area :body
     br
 
+    =form.label :files
+    =form.file_field :files, multiple: true, direct_upload: true
+    br
+
     =form.submit 'Save'
