@@ -27,6 +27,15 @@ module ApplicationHelper
             remote: true
   end
 
+  def links_to_files(resource)
+    return unless resource.files.attached?
+
+    resource.files.each do |file|
+      concat link_to(file.filename.to_s, file, target: 'blank', rel: 'nofollow')
+      concat ' '
+    end
+  end
+
   def user_links
     if current_user
       concat link_to 'Log out', destroy_user_session_path, method: :delete

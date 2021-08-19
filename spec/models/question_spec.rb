@@ -1,15 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe Question, type: :model do
-  context 'with answers' do
-    it { is_expected.to have_many(:answers).dependent(:destroy) }
-  end
-
-  context 'with author' do
+  describe 'Associations' do
     it { is_expected.to belong_to(:author).class_name('User') }
+    it { is_expected.to have_many(:answers).dependent(:destroy) }
+
+    it 'is expected to have many attached files' do
+      expect(described_class.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
+    end
   end
 
-  context 'with validations' do
+  describe 'Validations' do
     it { is_expected.to validate_presence_of :title }
     it { is_expected.to validate_presence_of :body }
   end
