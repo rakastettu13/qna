@@ -6,7 +6,7 @@ RSpec.feature 'Editing the answer', type: :feature do
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
   given(:question) { create(:question, author: user) }
-  given!(:answer) { create(:answer, author: user, question: question, files: find_file('README.md')) }
+  given!(:answer) { create(:answer, author: user, question: question) }
 
   describe 'Authorized user', js: true do
     background { sign_in(user) }
@@ -34,17 +34,6 @@ RSpec.feature 'Editing the answer', type: :feature do
 
         expect(page).to have_content answer.body
         expect(page).to have_content "Body can't be blank"
-      end
-    end
-
-    scenario 'tries to add files' do
-      within ".answer-#{answer.id}" do
-        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
-        click_on 'Save'
-
-        expect(find('.answer-files')).to have_link 'README.md'
-        expect(find('.answer-files')).to have_link 'rails_helper.rb'
-        expect(find('.answer-files')).to have_link 'spec_helper.rb'
       end
     end
   end
