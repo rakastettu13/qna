@@ -5,6 +5,8 @@
     = question.title
   p.question-body
     = question.body
+  p.question-files
+    - links_to_files(question)
   p
     = question.author.email
     =< question.created_at
@@ -21,6 +23,10 @@
 
     =form.label :body
     =form.text_area :body
+    br
+
+    =form.label :files
+    =form.file_field :files, multiple: true, direct_upload: true
     br
 
     =form.submit 'Save'

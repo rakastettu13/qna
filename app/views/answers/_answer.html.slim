@@ -7,6 +7,8 @@
 
     p.answer-body
       = answer.body
+    p.answer-files
+      - links_to_files(answer)
     p
       = answer.author.email
       =< answer.created_at
@@ -22,4 +24,10 @@
     = form_with model: answer, class: "edit-#{answer.id} hidden", local: false do |form|
       =form.label :body
       =form.text_area :body
+      br
+
+      =form.label :files
+      =form.file_field :files, multiple: true, direct_upload: true
+      br
+      
       =form.submit 'Save'

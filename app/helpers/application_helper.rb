@@ -1,30 +1,36 @@
 module ApplicationHelper
-  def link_to_delete(elem)
-    return unless elem.persisted? && current_user&.author_of?(elem)
+  def link_to_delete(resource)
+    return unless resource.persisted? && current_user&.author_of?(resource)
 
-    link_to "Delete the #{elem.class.to_s.downcase}",
-            polymorphic_path(elem),
+    link_to "Delete the #{resource.class.to_s.downcase}",
+            polymorphic_path(resource),
             class: 'delete-link',
             method: :delete,
             remote: true
   end
 
-  def link_to_edit(elem)
-    return unless elem.persisted? && current_user&.author_of?(elem)
+  def link_to_edit(resource)
+    return unless resource.persisted? && current_user&.author_of?(resource)
 
-    link_to "Edit the #{elem.class.to_s.downcase}",
+    link_to "Edit the #{resource.class.to_s.downcase}",
             '#',
             class: 'edit-link',
-            data: { id: elem.id }
+            data: { id: resource.id }
   end
 
-  def link_to_best(answer)
-    return unless answer.persisted? && current_user&.author_of?(answer.question)
+  def links_to_files(resource)
+    return unless resource.files.attached?
 
-    link_to 'Best',
-            best_answer_path(answer),
-            method: :patch,
-            remote: true
+    resource.files.each do |file|
+      concat link_to(file.filename.to_s, file, target: 'blank', rel: 'nofollow', class: "file-#{file.id}")
+
+      if current_user&.author_of?(resource)
+        concat link_to("\u274c", attachment_path(file), method: :delete, remote: true,
+                                                        class: "delete-file file-#{file.id}")
+      end
+
+      concat ' '
+    end
   end
 
   def user_links
