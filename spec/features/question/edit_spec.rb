@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.feature 'Editing the question', type: :feature do
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
-  given(:question) { create(:question, author: user, files: find_file('README.md')) }
+  given(:question) { create(:question, author: user) }
 
   describe 'Authorized user', js: true do
     background { sign_in(user) }
@@ -37,17 +37,6 @@ RSpec.feature 'Editing the question', type: :feature do
         expect(find('.question-body')).to have_content question.body
         expect(page).to have_content "Title can't be blank"
         expect(page).to have_content "Body can't be blank"
-      end
-    end
-
-    scenario 'tries to add files' do
-      within '.show-question' do
-        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
-        click_on 'Save'
-
-        expect(find('.question-files')).to have_link 'README.md'
-        expect(find('.question-files')).to have_link 'rails_helper.rb'
-        expect(find('.question-files')).to have_link 'spec_helper.rb'
       end
     end
   end

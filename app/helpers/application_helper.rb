@@ -22,7 +22,13 @@ module ApplicationHelper
     return unless resource.files.attached?
 
     resource.files.each do |file|
-      concat link_to(file.filename.to_s, file, target: 'blank', rel: 'nofollow')
+      concat link_to(file.filename.to_s, file, target: 'blank', rel: 'nofollow', class: "file-#{file.id}")
+
+      if current_user&.author_of?(resource)
+        concat link_to("\u274c", attachment_path(file), method: :delete, remote: true,
+                                                        class: "delete-file file-#{file.id}")
+      end
+
       concat ' '
     end
   end
