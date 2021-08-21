@@ -2,77 +2,58 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
-  let(:another_user) { create(:user) }
 
   before { sign_in(user) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
-      subject(:request_for_creation) do
-        post :create, params: { question: attributes_for(:question) }
-      end
+      subject(:request_for_creation) { post :create, params: { question: attributes_for(:question) } }
 
-      it 'saves a new question in the database' do
-        expect { request_for_creation }.to change(Question, :count).by(1)
-      end
-
-      it do
-        expect(request_for_creation).to redirect_to controller.question
-      end
+      it { expect { request_for_creation }.to change(Question, :count).by(1) }
+      it { is_expected.to redirect_to controller.question }
     end
 
     context 'with invalid attributes' do
-      subject(:request_for_creation) do
-        post :create, params: { question: attributes_for(:question, :invalid) }
-      end
+      subject(:request_for_creation) { post :create, params: { question: attributes_for(:question, :invalid) } }
 
-      it 'does not save the question' do
-        expect { request_for_creation }.not_to change(Question, :count)
-      end
-
-      it { expect(request_for_creation).to render_template :new }
+      it { expect { request_for_creation }.not_to change(Question, :count) }
+      it { is_expected.to render_template :new }
     end
   end
 
   describe 'PATCH #update' do
-    let(:question) { create(:question, author: user, title: 'title', body: 'body') }
-
-    context 'when author tries to update the question with valid attributes' do
-      before do
-        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-
-        question.reload
-      end
-
-      it { expect(question.title).to eq 'new title' }
-      it { expect(question.body).to eq 'new body' }
-      it { expect(response).to render_template :update }
-    end
-
-    context 'when author tries to update the question with invalid attributes' do
-      before do
-        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
-
-        question.reload
-      end
-
-      it { expect(question.title).to eq 'title' }
-      it { expect(question.body).to eq 'body' }
-      it { expect(response).to render_template :update }
-    end
-
-    context 'when another user tries to update the question' do
-      let(:question) { create(:question, author: another_user, title: 'title', body: 'body') }
+    context 'with valid attributes when the user is the author' do
+      let(:question) { create(:question, author: user, title: 'title', body: 'body') }
 
       before do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-
-        question.reload
       end
 
-      it { expect(question.title).to eq 'title' }
-      it { expect(question.body).to eq 'body' }
-      it { expect(response).to render_template :update }
+      it { expect { question.reload }.to change(question, :title).from('title').to('new title') }
+      it { expect { question.reload }.to change(question, :body).from('body').to('new body') }
+      it { is_expected.to render_template :update }
+    end
+
+    context 'with invalid attributes when the user is the author' do
+      let(:question) { create(:question, author: user, title: 'title', body: 'body') }
+
+      before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js }
+
+      it { expect { question.reload }.not_to change(question, :title) }
+      it { expect { question.reload }.not_to change(question, :body) }
+      it { is_expected.to render_template :update }
+    end
+
+    context 'when the user is not the author' do
+      let(:question) { create(:question, title: 'title', body: 'body') }
+
+      before do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+      end
+
+      it { expect { question.reload }.not_to change(question, :title) }
+      it { expect { question.reload }.not_to change(question, :body) }
+      it { is_expected.to render_template :update }
     end
   end
 
@@ -82,25 +63,15 @@ RSpec.describe QuestionsController, type: :controller do
     context 'when the user is the author' do
       let!(:question) { create(:question, author: user) }
 
-      it 'deletes the question from the database' do
-        expect { deletion_request }.to change(Question, :count).by(-1)
-      end
-
-      it 'redirects to index' do
-        expect(deletion_request).to redirect_to questions_path
-      end
+      it { expect { deletion_request }.to change(Question, :count).by(-1) }
+      it { is_expected.to redirect_to questions_path }
     end
 
     context 'when the user is not the author' do
-      let!(:question) { create(:question, author: another_user) }
+      let!(:question) { create(:question) }
 
-      it 'does not delete the question from the database' do
-        expect { deletion_request }.not_to change(Question, :count)
-      end
-
-      it 'redirects to index' do
-        expect(deletion_request).to render_template :show
-      end
+      it { expect { deletion_request }.not_to change(Question, :count) }
+      it { is_expected.to render_template :show }
     end
   end
 end
