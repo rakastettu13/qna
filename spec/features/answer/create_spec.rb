@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Creating answer', type: :feature do
+RSpec.feature 'Only authenticated user can answer the question.', type: :feature do
   given(:question) { create(:question) }
 
   describe 'Authenticated user', js: true do
@@ -22,11 +22,9 @@ RSpec.feature 'Creating answer', type: :feature do
       expect(page).to have_content "Body can't be blank"
     end
 
-    scenario 'tries to ask a answer with attached file' do
+    scenario 'tries to send an answer with attached file' do
       fill_in 'Body', with: 'Some text'
-
       attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
-
       click_on 'Reply'
 
       expect(find('.answer-files')).to have_link 'rails_helper.rb'
@@ -34,12 +32,10 @@ RSpec.feature 'Creating answer', type: :feature do
     end
   end
 
-  describe 'Unauthenticated user' do
-    scenario 'tries to send an answer' do
-      visit question_path(question)
-      click_on 'Reply'
+  scenario 'Unauthenticated user tries to send an answer' do
+    visit question_path(question)
+    click_on 'Reply'
 
-      expect(page).to have_content 'You need to sign in or sign up before continuing.'
-    end
+    expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
 end

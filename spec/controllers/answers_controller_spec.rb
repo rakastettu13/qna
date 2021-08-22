@@ -46,7 +46,7 @@ RSpec.describe AnswersController, type: :controller do
       it { is_expected.to render_template :update }
     end
 
-    context 'when the user is the author' do
+    context 'when the user is not the author' do
       let(:answer) { create(:answer, body: 'body') }
 
       before { patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js }
