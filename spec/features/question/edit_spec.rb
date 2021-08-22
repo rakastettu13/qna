@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.feature 'Editing the question', type: :feature do
+RSpec.feature 'Only author can edit the question.', type: :feature do
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
   given(:question) { create(:question, author: user) }
 
-  describe 'Authorized user', js: true do
+  describe 'Author', js: true do
     background { sign_in(user) }
 
     background do
@@ -22,8 +22,8 @@ RSpec.feature 'Editing the question', type: :feature do
         expect(page).to have_no_content question.title
         expect(page).to have_no_content question.body
         expect(page).not_to have_selector 'textarea'
-        expect(page).to have_content 'Edited title'
-        expect(page).to have_content 'Edited question'
+        expect(find('.question-title')).to have_content 'Edited title'
+        expect(find('.question-body')).to have_content 'Edited question'
       end
     end
 
@@ -41,7 +41,7 @@ RSpec.feature 'Editing the question', type: :feature do
     end
   end
 
-  scenario 'Unauthorized user tries to edit the question' do
+  scenario 'Another user tries to edit the question' do
     sign_in(another_user)
     visit question_path(question)
 
