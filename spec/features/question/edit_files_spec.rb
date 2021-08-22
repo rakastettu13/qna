@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.feature 'Editing the files', type: :feature do
+RSpec.feature 'Only author of question can edit or delete the attached files.', type: :feature do
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
   given(:question) { create(:question, author: user, files: find_file('README.md')) }
 
-  describe 'Authorized user', js: true do
+  describe 'Author of question', js: true do
     background { sign_in(user) }
     background { visit question_path(question) }
 
@@ -34,20 +34,20 @@ RSpec.feature 'Editing the files', type: :feature do
     end
   end
 
-  scenario 'Unauthorized user tries to edit attached files' do
+  scenario 'Another user tries to edit or delete attached files' do
     sign_in(another_user)
     visit question_path(question)
 
-    expect(page).to have_link 'README.md'
+    expect(find('.question-files')).to have_link 'README.md'
     expect(page).to have_no_link "\u274c"
     expect(page).to have_no_content 'Edit the question'
   end
 
-  scenario 'Unauthenticated user tries to edit attached files' do
+  scenario 'Unauthenticated user tries to edit or delete attached files' do
     visit question_path(question)
 
-    expect(page).to have_link 'README.md'
+    expect(find('.question-files')).to have_link 'README.md'
     expect(page).to have_no_link "\u274c"
-    expect(page).to have_no_content 'Edit the question'
+    expect(page).to have_no_link 'Edit the question'
   end
 end

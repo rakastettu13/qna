@@ -16,18 +16,15 @@ RSpec.describe Question, type: :model do
   describe '#best_answer' do
     subject { question.best_answer }
 
-    let(:question) { create(:question) }
+    let(:question) { create(:question_with_answers) }
 
     context 'when the best answer exists' do
       let!(:best_answer) { create(:answer, question: question, best: true) }
-      let!(:answer) { create(:answer, question: question) }
 
       it { is_expected.to eql(best_answer) }
     end
 
     context 'when the best answer does not exist' do
-      let!(:answer) { create(:answer, question: question) }
-
       it { is_expected.to be_nil }
     end
   end
@@ -39,7 +36,7 @@ RSpec.describe Question, type: :model do
     let(:another_answer) { create(:answer, question: question) }
 
     context 'when the best answer exists' do
-      let!(:answer) { create(:answer, question: question, best: true) }
+      let(:answer) { create(:answer, question: question, best: true) }
 
       it { expect { update_best_answer_of_question }.to change(question, :best_answer).from(answer).to(another_answer) }
     end
