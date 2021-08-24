@@ -8,7 +8,7 @@ RSpec.describe Question, type: :model do
   it { is_expected.to validate_presence_of :title }
   it { is_expected.to validate_presence_of :body }
 
-  it { is_expected.to accept_nested_attributes_for :links }
+  it { is_expected.to accept_nested_attributes_for(:links).allow_destroy(true) }
 
   describe '#files' do
     subject { described_class.new.files }
