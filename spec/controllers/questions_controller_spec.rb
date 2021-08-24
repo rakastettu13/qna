@@ -15,6 +15,18 @@ RSpec.describe QuestionsController, type: :controller do
     it { is_expected.to render_template :new }
   end
 
+  describe 'GET #show' do
+    let(:question) { create(:question) }
+
+    before { get :show, params: { id: question } }
+
+    it 'builds link to new answer' do
+      expect(controller.answer.links.first).to be_a_new(Link)
+    end
+
+    it { is_expected.to render_template :show }
+  end
+
   describe 'POST #create' do
     context 'with valid attributes' do
       subject(:request_for_creation) { post :create, params: { question: attributes_for(:question) } }

@@ -9,6 +9,10 @@ class QuestionsController < ApplicationController
     question.links.build
   end
 
+  def show
+    answer.links.build
+  end
+
   def create
     question.author = current_user
     if question.save

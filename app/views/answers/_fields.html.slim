@@ -1,0 +1,16 @@
+= form_with model: form_model, class: form_class, local: false do |f|
+  .field
+    = f.label :body
+    =< f.text_area :body
+
+  .field
+    = f.label :files
+    =< f.file_field :files, multiple: true, direct_upload: true
+
+  #links
+    = f.fields_for :links do |link|
+      = render 'links/link_fields', f: link
+    .links
+      = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
+
+  = f.submit form_submit

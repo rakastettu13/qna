@@ -9,6 +9,9 @@
       = answer.body
     p.answer-files
       - links_to_files(answer)
+    ul.answer-links
+      -answer.links.each do |link|
+        li = link_to link.name, link.url
     p
       = answer.author.email
       =< answer.created_at
@@ -21,13 +24,4 @@
 
     .answer-update-errors
 
-    = form_with model: answer, class: "edit-#{answer.id} hidden", local: false do |form|
-      =form.label :body
-      =form.text_area :body
-      br
-
-      =form.label :files
-      =form.file_field :files, multiple: true, direct_upload: true
-      br
-      
-      =form.submit 'Save'
+    = render 'answers/fields', form_model: answer, form_class: "edit-#{answer.id} hidden", form_submit: 'Save'
