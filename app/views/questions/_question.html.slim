@@ -7,6 +7,9 @@
     = question.body
   p.question-files
     - links_to_files(question)
+  ul.question-links
+    -question.links.each do |link|
+      li = link_to link.name, link.url
   p
     = question.author.email
     =< question.created_at
