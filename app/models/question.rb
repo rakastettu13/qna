@@ -20,6 +20,7 @@ class Question < ApplicationRecord
     transaction do
       best_answer&.update!(best: false)
       answer.update!(best: true)
+      achievement&.update!(winner: answer.author)
     end
   end
 end

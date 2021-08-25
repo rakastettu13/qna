@@ -50,5 +50,11 @@ RSpec.describe Question, type: :model do
     context 'when the best answer does not exist' do
       it { expect { update_best_answer_of_question }.to change(question, :best_answer).from(nil).to(another_answer) }
     end
+
+    context 'when an achievement for the best answer was added' do
+      let!(:achievement) { create(:achievement, question: question) }
+
+      it { expect { update_best_answer_of_question }.to change(achievement, :winner).to(another_answer.author) }
+    end
   end
 end
