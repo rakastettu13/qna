@@ -13,13 +13,16 @@ RSpec.feature 'The user can attach links when creating and updating a question, 
     scenario 'the user tries to attach links', js: true do
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'Some text'
-      fill_in 'Name', with: 'example'
-      fill_in 'Url', with: 'https://example.com'
-      click_on 'add link'
 
-      within all('.nested-fields').last do
-        fill_in 'Name', with: 'another example'
-        fill_in 'Url', with: 'https://example.ru'
+      within('#links') do
+        fill_in 'Name', with: 'example'
+        fill_in 'Url', with: 'https://example.com'
+        click_on 'add link'
+
+        within all('.nested-fields').last do
+          fill_in 'Name', with: 'another example'
+          fill_in 'Url', with: 'https://example.ru'
+        end
       end
 
       click_on 'Ask'
@@ -33,8 +36,12 @@ RSpec.feature 'The user can attach links when creating and updating a question, 
     scenario 'the user tries to attach gist', js: true do
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'Some text'
-      fill_in 'Name', with: 'test gist'
-      fill_in 'Url', with: gist_url
+
+      within('#links') do
+        fill_in 'Name', with: 'test gist'
+        fill_in 'Url', with: gist_url
+      end
+
       click_on 'Ask'
 
       within('.question-links') do

@@ -16,5 +16,10 @@
       = render 'links/link_fields', f: link
     .links
       = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
-      
+
+  .achievement
+    = f.fields_for :achievement do |achievement_form|
+      = render 'achievement_fields', f: achievement_form
+    .links.max-one-association
+      = link_to_add_association 'add achievement', f, :achievement, force_non_association_create: true
   = f.submit form_submit

@@ -12,6 +12,10 @@ RSpec.describe QuestionsController, type: :controller do
       expect(controller.question.links.first).to be_a_new(Link)
     end
 
+    it 'builds achievement to question' do
+      expect(controller.question.achievement).to be_a_new(Achievement)
+    end
+
     it { is_expected.to render_template :new }
   end
 

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :attachments, only: :destroy
+  resources :achievements, only: :index
 
   resources :questions, except: :edit do
     resources :answers, only: %i[create update destroy], shallow: true do

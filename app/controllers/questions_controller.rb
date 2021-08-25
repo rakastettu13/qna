@@ -7,6 +7,7 @@ class QuestionsController < ApplicationController
 
   def new
     question.links.build
+    question.build_achievement
   end
 
   def show
@@ -38,6 +39,9 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [], links_attributes: %i[id name url _destroy])
+    params.require(:question).permit(:title, :body,
+                                     files: [],
+                                     links_attributes: %i[id name url _destroy],
+                                     achievement_attributes: %i[id name image])
   end
 end
