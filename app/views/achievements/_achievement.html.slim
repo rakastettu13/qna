@@ -1,9 +1,7 @@
-table
-  tr
-    th Name
-    th Image
-  tr
-    td
-      = achievement.name
-    td
-      = image_tag achievement.image, height: '25'
+tr
+  td
+    = achievement.name
+  td
+    = achievement.question.title
+  td
+    = image_tag achievement.image, height: '25'
