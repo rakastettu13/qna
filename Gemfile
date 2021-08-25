@@ -29,6 +29,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'cocoon'
 gem 'decent_exposure', '~> 3.0'
 gem 'devise'
+gem 'octokit', '~>4.0'
 gem 'slim-rails'
 gem 'validate_url'
 
