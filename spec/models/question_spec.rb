@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Question, type: :model do
   it { is_expected.to belong_to(:author).class_name('User') }
+
+  it { is_expected.to have_one(:achievement).dependent(:destroy) }
   it { is_expected.to have_many(:answers).dependent(:destroy) }
   it { is_expected.to have_many(:links).dependent(:destroy) }
 
@@ -9,6 +11,7 @@ RSpec.describe Question, type: :model do
   it { is_expected.to validate_presence_of :body }
 
   it { is_expected.to accept_nested_attributes_for(:links).allow_destroy(true) }
+  it { is_expected.to accept_nested_attributes_for(:achievement) }
 
   describe '#files' do
     subject { described_class.new.files }
