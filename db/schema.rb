@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_210_823_172_732) do
+ActiveRecord::Schema.define(version: 20_210_825_030_130) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
+
+  create_table 'achievements', force: :cascade do |t|
+    t.string 'name', null: false
+    t.bigint 'question_id', null: false
+    t.bigint 'winner_id'
+    t.datetime 'created_at', precision: 6, null: false
+    t.datetime 'updated_at', precision: 6, null: false
+    t.index ['question_id'], name: 'index_achievements_on_question_id'
+    t.index ['winner_id'], name: 'index_achievements_on_winner_id'
+  end
 
   create_table 'active_storage_attachments', force: :cascade do |t|
     t.string 'name', null: false
@@ -55,8 +65,8 @@ ActiveRecord::Schema.define(version: 20_210_823_172_732) do
   end
 
   create_table 'links', force: :cascade do |t|
-    t.string 'name'
-    t.string 'url'
+    t.string 'name', null: false
+    t.string 'url', null: false
     t.string 'linkable_type', null: false
     t.bigint 'linkable_id', null: false
     t.datetime 'created_at', precision: 6, null: false
@@ -81,6 +91,8 @@ ActiveRecord::Schema.define(version: 20_210_823_172_732) do
     t.index ['email'], name: 'index_users_on_email', unique: true
   end
 
+  add_foreign_key 'achievements', 'questions'
+  add_foreign_key 'achievements', 'users', column: 'winner_id'
   add_foreign_key 'active_storage_attachments', 'active_storage_blobs', column: 'blob_id'
   add_foreign_key 'active_storage_variant_records', 'active_storage_blobs', column: 'blob_id'
   add_foreign_key 'answers', 'questions'
