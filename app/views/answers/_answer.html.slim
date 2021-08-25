@@ -10,8 +10,7 @@
     p.answer-files
       - links_to_files(answer)
     ul.answer-links
-      -answer.links.each do |link|
-        li = link_to link.name, link.url
+      = attached_links(answer)
     p
       = answer.author.email
       =< answer.created_at

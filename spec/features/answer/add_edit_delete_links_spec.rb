@@ -3,59 +3,72 @@ require 'rails_helper'
 RSpec.feature 'The user can attach links when creating and updating an answer, edit and delete attached links.',
               type: :feature do
   given(:user) { create(:user) }
-  given(:qna_url) { 'https://github.com/rakastettu13/qna' }
-  given(:gist_url) { 'https://gist.github.com/rakastettu13/' }
+  given(:gist_url) { 'https://gist.github.com/rakastettu13/15d341fd094a58ed1f56f6556b63cd08' }
   given(:question) { create(:question) }
 
   before { sign_in(user) }
 
-  scenario 'The user tries to attach links when creating an answer', js: true do
-    visit question_path(question)
+  describe 'When creating an answer' do
+    before { visit question_path(question) }
 
-    fill_in 'Body', with: 'Some text'
-    fill_in 'Name', with: 'qna link'
-    fill_in 'Url', with: qna_url
-    click_on 'add link'
+    scenario 'the user tries to attach links', js: true do
+      fill_in 'Body', with: 'Some text'
+      fill_in 'Name', with: 'example'
+      fill_in 'Url', with: 'https://example.com'
+      click_on 'add link'
 
-    within all('.nested-fields').last do
-      fill_in 'Name', with: 'gist link'
-      fill_in 'Url', with: gist_url
+      within all('.nested-fields').last do
+        fill_in 'Name', with: 'another example'
+        fill_in 'Url', with: 'https://example.ru'
+      end
+
+      click_on 'Reply'
+
+      within('.answer-links') do
+        expect(page).to have_link 'example', href: 'https://example.com'
+        expect(page).to have_link 'another example', href: 'https://example.ru'
+      end
     end
 
-    click_on 'Reply'
+    scenario 'the user tries to attach gist', js: true do
+      fill_in 'Body', with: 'Some text'
+      fill_in 'Name', with: 'test gist'
+      fill_in 'Url', with: gist_url
+      click_on 'Reply'
 
-    within('.answer-links') do
-      expect(page).to have_link 'qna link', href: qna_url
-      expect(page).to have_link 'gist link', href: gist_url
+      within('.answer-links') do
+        expect(page).to have_link 'test gist', href: gist_url
+        expect(page).to have_content 'gist for tests'
+      end
     end
   end
 
-  describe 'Author' do
+  describe 'When editing an answer' do
     given!(:answer) { create(:answer, author: user, question: question) }
-    given!(:link) { create(:link, linkable: answer, name: 'gist link', url: gist_url) }
+    given!(:link) { create(:link, linkable: answer, name: 'example', url: 'https://example.com') }
 
     before { visit question_path(question) }
 
-    scenario 'tries to add link when editing an answer', js: true do
+    scenario 'the author tries to add link', js: true do
       within(".answer-#{answer.id}") do
         click_on 'Edit the answer'
         click_on 'add link'
 
         within all('.nested-fields').last do
-          fill_in 'Name', with: 'qna link'
-          fill_in 'Url', with: qna_url
+          fill_in 'Name', with: 'another_example'
+          fill_in 'Url', with: 'https://example.ru'
         end
 
         click_on 'Save'
       end
 
       within('.answer-links') do
-        expect(page).to have_link 'qna link', href: qna_url
-        expect(page).to have_link 'gist link', href: gist_url
+        expect(page).to have_link 'example', href: 'https://example.com'
+        expect(page).to have_link 'another_example', href: 'https://example.ru'
       end
     end
 
-    scenario 'tries to delete link when editing an answer', js: true do
+    scenario 'the author tries to delete link', js: true do
       expect(find('.answer-links')).to have_link link.name, href: link.url
 
       within(".answer-#{answer.id}") do
