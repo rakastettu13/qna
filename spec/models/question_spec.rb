@@ -2,10 +2,16 @@ require 'rails_helper'
 
 RSpec.describe Question, type: :model do
   it { is_expected.to belong_to(:author).class_name('User') }
+
+  it { is_expected.to have_one(:achievement).dependent(:destroy) }
   it { is_expected.to have_many(:answers).dependent(:destroy) }
+  it { is_expected.to have_many(:links).dependent(:destroy) }
 
   it { is_expected.to validate_presence_of :title }
   it { is_expected.to validate_presence_of :body }
+
+  it { is_expected.to accept_nested_attributes_for(:links).allow_destroy(true) }
+  it { is_expected.to accept_nested_attributes_for(:achievement) }
 
   describe '#files' do
     subject { described_class.new.files }
@@ -43,6 +49,12 @@ RSpec.describe Question, type: :model do
 
     context 'when the best answer does not exist' do
       it { expect { update_best_answer_of_question }.to change(question, :best_answer).from(nil).to(another_answer) }
+    end
+
+    context 'when an achievement for the best answer was added' do
+      let!(:achievement) { create(:achievement, question: question) }
+
+      it { expect { update_best_answer_of_question }.to change(achievement, :winner).to(another_answer.author) }
     end
   end
 end

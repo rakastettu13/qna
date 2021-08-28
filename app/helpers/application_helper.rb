@@ -33,6 +33,12 @@ module ApplicationHelper
     end
   end
 
+  def attached_links(resource)
+    resource.links.find_each do |link|
+      concat content_tag(:li, link_to(link.name, link.url) + GistService.view(link))
+    end
+  end
+
   def user_links
     if current_user
       concat link_to 'Log out', destroy_user_session_path, method: :delete

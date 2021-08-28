@@ -1,14 +1,16 @@
-.answer-create-errors
+= form_with model: form_model, class: form_class, local: false do |f|
+  .field
+    = f.label :body
+    =< f.text_area :body
 
-= form_with model: [question, answer], class: 'new-answer', local: false do |form|
-  =form.label :body
-  br
-  =form.text_area :body
-  br
-  
-  =form.label :files
-  br
-  =form.file_field :files, multiple: true, direct_upload: true
-  br
+  .field
+    = f.label :files
+    =< f.file_field :files, multiple: true, direct_upload: true
 
-  =form.submit 'Reply'
+  #links
+    = f.fields_for :links do |link|
+      = render 'links/link_fields', f: link
+    .links
+      = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
+
+  = f.submit form_submit

@@ -7,6 +7,8 @@
     = question.body
   p.question-files
     - links_to_files(question)
+  ul.question-links
+    = attached_links(question)
   p
     = question.author.email
     =< question.created_at
@@ -16,17 +18,4 @@
 
   .question-update-errors
 
-  = form_with model: question, class: "edit-#{question.id} hidden", local: false do |form|
-    =form.label :title
-    =form.text_area :title
-    br
-
-    =form.label :body
-    =form.text_area :body
-    br
-
-    =form.label :files
-    =form.file_field :files, multiple: true, direct_upload: true
-    br
-
-    =form.submit 'Save'
+  = render 'form', local: false, form_class: "edit-#{question.id} hidden", form_submit: 'Save'

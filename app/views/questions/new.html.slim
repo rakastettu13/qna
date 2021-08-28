@@ -1,16 +1,2 @@
 = render 'shared/errors', resource: question
-
-= form_with model: question, local:true  do |form|
-  =form.label :title
-  =form.text_field :title
-  br
-
-  =form.label :body
-  =form.text_field :body
-  br
-
-  =form.label :files
-  =form.file_field :files, multiple: true, direct_upload: true
-  br
-
-  =form.submit 'Ask'
+= render 'form', local: true, form_class: '', form_submit: 'Ask'
