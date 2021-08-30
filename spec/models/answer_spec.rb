@@ -4,6 +4,7 @@ RSpec.describe Answer, type: :model do
   it { is_expected.to belong_to :question }
   it { is_expected.to belong_to(:author).class_name('User') }
   it { is_expected.to have_many(:links).dependent(:destroy) }
+  it { is_expected.to have_many(:votes).dependent(:destroy) }
 
   it { is_expected.to accept_nested_attributes_for(:links).allow_destroy(true) }
 
@@ -26,6 +27,22 @@ RSpec.describe Answer, type: :model do
       before { allow(answer).to receive(:best).and_return(false) }
 
       it { is_expected.not_to validate_uniqueness_of(:best).scoped_to(:question_id) }
+    end
+  end
+
+  describe '#rating' do
+    subject { answer.rating }
+
+    context 'with votes' do
+      let(:answer) { create(:answer_with_votes) }
+
+      it { is_expected.to be answer.votes.sum(:point) }
+    end
+
+    context 'without votes' do
+      let(:answer) { create(:answer) }
+
+      it { is_expected.to be_zero }
     end
   end
 end

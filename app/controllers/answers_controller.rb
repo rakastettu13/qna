@@ -1,4 +1,6 @@
 class AnswersController < ApplicationController
+  include VotedFor
+
   before_action :authenticate_user!
 
   expose :question, -> { find_question }

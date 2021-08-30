@@ -6,6 +6,10 @@ FactoryBot.define do
       association :votable, factory: :question
     end
 
+    trait :for_answer do
+      association :votable, factory: :answer
+    end
+
     sequence :point do |n|
       if n.even?
         1

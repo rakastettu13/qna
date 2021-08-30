@@ -5,6 +5,8 @@ RSpec.describe AnswersController, type: :controller do
 
   before { sign_in(user) }
 
+  include_examples 'voting', :answer
+
   describe 'POST #create' do
     let(:question) { create(:question) }
 

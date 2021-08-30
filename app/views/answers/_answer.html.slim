@@ -11,6 +11,9 @@
       - links_to_files(answer)
     ul.answer-links
       = attached_links(answer)
+
+    = render 'shared/voting', resource: answer
+
     p
       = answer.author.email
       =< answer.created_at

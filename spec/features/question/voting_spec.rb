@@ -3,9 +3,10 @@ require 'rails_helper'
 RSpec.feature 'Authenticated user can vote for a question.', js: true do
   let(:user) { create(:user) }
   let(:question) { create(:question) }
-  let(:user_question) { create(:question, author: user) }
 
   describe 'Authenticated user' do
+    let(:user_question) { create(:question, author: user) }
+
     before { sign_in(user) }
 
     scenario 'tries to increase the rating of the question and cancel the vote' do
@@ -62,8 +63,8 @@ RSpec.feature 'Authenticated user can vote for a question.', js: true do
       expect(page).to have_content question.rating
 
       click_on '+'
-    end
 
-    expect(find('.voting-errors')).to have_content 'You need to sign in or sign up before continuing.'
+      expect(find('.voting-errors')).to have_content 'You need to sign in or sign up before continuing.'
+    end
   end
 end
