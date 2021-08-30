@@ -20,5 +20,16 @@ FactoryBot.define do
         Array.new(answers_count) { association(:answer) }
       end
     end
+
+    factory :question_with_votes do
+      transient do
+        votes_count { 3 }
+      end
+
+      after(:create) do |question, evaluator|
+        create_list(:vote, evaluator.votes_count, :for_question, votable: question)
+        question.reload
+      end
+    end
   end
 end

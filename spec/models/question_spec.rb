@@ -6,6 +6,7 @@ RSpec.describe Question, type: :model do
   it { is_expected.to have_one(:achievement).dependent(:destroy) }
   it { is_expected.to have_many(:answers).dependent(:destroy) }
   it { is_expected.to have_many(:links).dependent(:destroy) }
+  it { is_expected.to have_many(:votes).dependent(:destroy) }
 
   it { is_expected.to validate_presence_of :title }
   it { is_expected.to validate_presence_of :body }
@@ -55,6 +56,22 @@ RSpec.describe Question, type: :model do
       let!(:achievement) { create(:achievement, question: question) }
 
       it { expect { update_best_answer_of_question }.to change(achievement, :winner).to(another_answer.author) }
+    end
+  end
+
+  describe '#rating' do
+    subject { question.rating }
+
+    context 'with votes' do
+      let(:question) { create(:question_with_votes) }
+
+      it { is_expected.to be question.votes.sum(:point) }
+    end
+
+    context 'without votes' do
+      let(:question) { create(:question) }
+
+      it { is_expected.to be_zero }
     end
   end
 end

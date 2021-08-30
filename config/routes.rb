@@ -3,6 +3,13 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  concern :votable do
+    member do
+      patch :increase_rating
+      patch :decrease_rating
+    end
+  end
+
   resources :attachments, only: :destroy
   resources :achievements, only: :index do
     collection do
@@ -10,7 +17,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :questions, except: :edit do
+  resources :questions, except: :edit, concerns: :votable do
     resources :answers, only: %i[create update destroy], shallow: true do
       member do
         patch :best

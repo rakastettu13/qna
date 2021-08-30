@@ -1,4 +1,6 @@
 class QuestionsController < ApplicationController
+  include VotedFor
+
   before_action :authenticate_user!, except: %i[index show]
 
   expose :questions, -> { Question.all }
