@@ -6,12 +6,11 @@ RSpec.feature 'Authenticated user can vote for a question.', js: true do
   let(:user_question) { create(:question, author: user) }
 
   describe 'Authenticated user' do
-    before do
-      sign_in(user)
-      visit question_path(question)
-    end
+    before { sign_in(user) }
 
     scenario 'tries to increase the rating of the question' do
+      visit question_path(question)
+
       within('.voting') do
         expect(page).to have_content '0'
 
@@ -22,12 +21,24 @@ RSpec.feature 'Authenticated user can vote for a question.', js: true do
     end
 
     scenario 'tries to decrease the rating of the question' do
+      visit question_path(question)
+
       within('.voting') do
         expect(page).to have_content '0'
 
         click_on '–'
 
         expect(page).to have_content '-1'
+      end
+    end
+
+    scenario 'tries to change the rating of his question' do
+      visit question_path(user_question)
+
+      within('.voting') do
+        expect(page).to have_no_link '+'
+        expect(page).to have_no_link '-'
+        expect(page).to have_content question.rating
       end
     end
   end

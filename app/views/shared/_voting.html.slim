@@ -1,0 +1,9 @@
+p.voting-errors
+
+.voting
+  - if current_user&.author_of?(resource)
+    span.rating = resource.rating
+  -  else
+    = link_to '+', polymorphic_path([:increase_rating, resource]), method: :patch, remote: true, data: { type: :json }
+    span.rating = resource.rating
+    =< link_to '–', polymorphic_path([:decrease_rating, resource]), method: :patch, remote: true, data: { type: :json }

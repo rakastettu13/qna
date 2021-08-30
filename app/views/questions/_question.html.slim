@@ -10,11 +10,9 @@
     - links_to_files(question)
   ul.question-links
     = attached_links(question)
-  p.voting-errors
-  .voting
-    = link_to '+', increase_rating_question_path(question), method: :patch, remote: true, data: { type: :json }
-    span.rating = question.rating
-    =< link_to '–', decrease_rating_question_path(question), method: :patch, remote: true, data: { type: :json }
+
+  = render 'shared/voting', resource: question
+  
   p
     = question.author.email
     =< question.created_at

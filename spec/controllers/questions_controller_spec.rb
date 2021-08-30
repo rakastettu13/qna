@@ -5,6 +5,8 @@ RSpec.describe QuestionsController, type: :controller do
 
   before { sign_in(user) }
 
+  include_examples 'voting', :question
+
   describe 'GET #new' do
     before { get :new }
 
@@ -98,36 +100,6 @@ RSpec.describe QuestionsController, type: :controller do
 
       it { expect { deletion_request }.not_to change(Question, :count) }
       it { is_expected.to render_template :show }
-    end
-  end
-
-  describe 'PATCH #increase' do
-    subject(:increase) { patch :increase_rating, params: { id: question }, format: :json }
-
-    let(:question) { create(:question) }
-
-    it { expect { increase }.to change(question, :rating).by(1) }
-
-    describe 'response' do
-      before { increase }
-
-      it { expect(response.header['Content-Type']).to include 'application/json' }
-      it { expect(response.body).to include question.rating.to_s }
-    end
-  end
-
-  describe 'PATCH #decrease' do
-    subject(:decrease) { patch :decrease_rating, params: { id: question }, format: :json }
-
-    let(:question) { create(:question) }
-
-    it { expect { decrease }.to change(question, :rating).by(-1) }
-
-    describe 'response' do
-      before { decrease }
-
-      it { expect(response.header['Content-Type']).to include 'application/json' }
-      it { expect(response.body).to include question.rating.to_s }
     end
   end
 end
