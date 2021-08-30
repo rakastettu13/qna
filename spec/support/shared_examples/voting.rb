@@ -58,4 +58,20 @@ RSpec.shared_examples 'voting' do |votable|
       end
     end
   end
+
+  describe 'DELETE #cancel' do
+    subject(:cancel) { delete :cancel, params: { id: resource }, format: :json }
+
+    let(:resource) { create(votable) }
+    let!(:vote) { create(:vote, :for_question, votable: resource, user: user) }
+
+    it { expect { cancel }.to change(resource.votes, :count).by(-1) }
+
+    describe 'response' do
+      before { cancel }
+
+      it { expect(response.header['Content-Type']).to include 'application/json' }
+      it { expect(response.body).to include resource.rating.to_s }
+    end
+  end
 end

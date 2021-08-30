@@ -8,7 +8,7 @@ RSpec.feature 'Authenticated user can vote for a question.', js: true do
   describe 'Authenticated user' do
     before { sign_in(user) }
 
-    scenario 'tries to increase the rating of the question' do
+    scenario 'tries to increase the rating of the question and cancel the vote' do
       visit question_path(question)
 
       within('.voting') do
@@ -18,10 +18,15 @@ RSpec.feature 'Authenticated user can vote for a question.', js: true do
 
         expect(page).to have_content '1'
         expect(page).to have_no_link '+'
+
+        click_on 'cancel'
+
+        expect(page).to have_link '+'
+        expect(page).to have_link '–'
       end
     end
 
-    scenario 'tries to decrease the rating of the question' do
+    scenario 'tries to decrease the rating of the question and cancel the vote' do
       visit question_path(question)
 
       within('.voting') do
@@ -31,6 +36,11 @@ RSpec.feature 'Authenticated user can vote for a question.', js: true do
 
         expect(page).to have_content '-1'
         expect(page).to have_no_link '–'
+
+        click_on 'cancel'
+
+        expect(page).to have_link '+'
+        expect(page).to have_link '–'
       end
     end
 

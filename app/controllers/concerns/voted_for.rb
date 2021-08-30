@@ -28,4 +28,12 @@ module VotedFor
       end
     end
   end
+
+  def cancel
+    resource.votes.find_by(user: current_user).destroy
+
+    respond_to do |format|
+      format.json { render json: resource.rating }
+    end
+  end
 end

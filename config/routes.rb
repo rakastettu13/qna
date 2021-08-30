@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     member do
       patch :increase_rating
       patch :decrease_rating
+      delete :cancel
     end
   end
 
