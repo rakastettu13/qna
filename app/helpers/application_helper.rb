@@ -82,6 +82,7 @@ module ApplicationHelper
 
     concat link_to '–', polymorphic_path([:decrease_rating, resource]),
                    method: :patch, remote: true, data: { type: :json }, class: 'voting-link'
+                   
     concat link_to 'cancel', polymorphic_path([:cancel, resource]),
                    method: :delete, remote: true, data: { type: :json }, class: 'cancel-link hidden'
   end
