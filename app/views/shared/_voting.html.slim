@@ -1,9 +1,11 @@
+= javascript_pack_tag "voting"
+
 p.voting-errors
 
 .voting
-  - if current_user&.author_of?(resource)
+  - if current_user&.author_of?(resource) or current_user&.voted_for?(resource)
     span.rating = resource.rating
-  -  else
-    = link_to '+', polymorphic_path([:increase_rating, resource]), method: :patch, remote: true, data: { type: :json }
+  - else
+    = link_to '+', polymorphic_path([:increase_rating, resource]), method: :patch, remote: true, data: { type: :json }, class: 'voting-link'
     span.rating = resource.rating
-    =< link_to '–', polymorphic_path([:decrease_rating, resource]), method: :patch, remote: true, data: { type: :json }
+    =< link_to '–', polymorphic_path([:decrease_rating, resource]), method: :patch, remote: true, data: { type: :json }, class: 'voting-link'

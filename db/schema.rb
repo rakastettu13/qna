@@ -98,6 +98,7 @@ ActiveRecord::Schema.define(version: 20_210_830_011_154) do
     t.integer 'point', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
+    t.index %w[user_id votable_type votable_id], name: 'index_votes_on_user_id_and_votable_type_and_votable_id'
     t.index ['user_id'], name: 'index_votes_on_user_id'
     t.index %w[votable_type votable_id], name: 'index_votes_on_votable'
   end

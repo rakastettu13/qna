@@ -17,6 +17,7 @@ RSpec.feature 'Authenticated user can vote for a question.', js: true do
         click_on '+'
 
         expect(page).to have_content '1'
+        expect(page).to have_no_link '+'
       end
     end
 
@@ -29,6 +30,7 @@ RSpec.feature 'Authenticated user can vote for a question.', js: true do
         click_on '–'
 
         expect(page).to have_content '-1'
+        expect(page).to have_no_link '–'
       end
     end
 
@@ -37,7 +39,7 @@ RSpec.feature 'Authenticated user can vote for a question.', js: true do
 
       within('.voting') do
         expect(page).to have_no_link '+'
-        expect(page).to have_no_link '-'
+        expect(page).to have_no_link '–'
         expect(page).to have_content question.rating
       end
     end

@@ -6,18 +6,26 @@ module VotedFor
   end
 
   def increase_rating
-    resource.votes.create(user: current_user, point: 1) unless current_user.author_of?(resource)
+    vote = resource.votes.build(user: current_user, point: 1)
 
     respond_to do |format|
-      format.json { render json: question.rating }
+      if vote.save
+        format.json { render json: resource.rating }
+      else
+        format.json { render json: vote.errors.full_messages, status: :unprocessable_entity }
+      end
     end
   end
 
   def decrease_rating
-    resource.votes.create(user: current_user, point: -1) unless current_user.author_of?(resource)
+    vote = resource.votes.build(user: current_user, point: -1)
 
     respond_to do |format|
-      format.json { render json: question.rating }
+      if vote.save
+        format.json { render json: resource.rating }
+      else
+        format.json { render json: { error: vote.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 end

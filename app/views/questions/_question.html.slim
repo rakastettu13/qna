@@ -1,5 +1,4 @@
 = javascript_pack_tag "question"
-= javascript_pack_tag "voting"
 
 .show-question
   p.question-title
@@ -12,7 +11,7 @@
     = attached_links(question)
 
   = render 'shared/voting', resource: question
-  
+
   p
     = question.author.email
     =< question.created_at
