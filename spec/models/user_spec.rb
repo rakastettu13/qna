@@ -20,4 +20,21 @@ RSpec.describe User, type: :model do
       it { is_expected.not_to be_author_of(resource) }
     end
   end
+
+  describe '#voted_for?' do
+    subject(:user) { create(:user) }
+
+    context 'when the user voted' do
+      let(:resource) { create(:question) }
+      let!(:vote) { create(:vote, :for_question, votable: resource, user: user) }
+
+      it { is_expected.to be_voted_for(resource) }
+    end
+
+    context 'when the user did not vote' do
+      let(:resource) { create(:question) }
+
+      it { is_expected.not_to be_voted_for(resource) }
+    end
+  end
 end

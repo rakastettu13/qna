@@ -5,6 +5,8 @@ RSpec.describe QuestionsController, type: :controller do
 
   before { sign_in(user) }
 
+  include_examples 'voting', :question
+
   describe 'GET #new' do
     before { get :new }
 
