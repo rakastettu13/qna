@@ -62,12 +62,12 @@ module ApplicationHelper
   private
 
   def cancel(resource)
-    concat link_to '+', polymorphic_path([:increase_rating, resource]),
+    concat link_to '+', polymorphic_path([:change_rating, resource], point: +1),
                    method: :patch, remote: true, data: { type: :json }, class: 'voting-link hidden'
 
     concat content_tag :span, resource.rating, class: 'rating'
 
-    concat link_to '–', polymorphic_path([:decrease_rating, resource]),
+    concat link_to '–', polymorphic_path([:change_rating, resource], point: -1),
                    method: :patch, remote: true, data: { type: :json }, class: 'voting-link hidden'
 
     concat link_to 'cancel', polymorphic_path([:cancel, resource]),
@@ -75,14 +75,14 @@ module ApplicationHelper
   end
 
   def voting(resource)
-    concat link_to '+', polymorphic_path([:increase_rating, resource]),
+    concat link_to '+', polymorphic_path([:change_rating, resource], point: +1),
                    method: :patch, remote: true, data: { type: :json }, class: 'voting-link'
 
     concat content_tag :span, resource.rating, class: 'rating'
 
-    concat link_to '–', polymorphic_path([:decrease_rating, resource]),
+    concat link_to '–', polymorphic_path([:change_rating, resource], point: -1),
                    method: :patch, remote: true, data: { type: :json }, class: 'voting-link'
-                   
+
     concat link_to 'cancel', polymorphic_path([:cancel, resource]),
                    method: :delete, remote: true, data: { type: :json }, class: 'cancel-link hidden'
   end
