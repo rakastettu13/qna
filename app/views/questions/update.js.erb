@@ -1,5 +1,5 @@
 $('.question-update-errors').html('<%= render 'shared/errors', resource: question %>');
 
 <% unless question.errors.present? %>
-  $('.show-question').replaceWith('<%= j render question %>');
+  $('.show-question').replaceWith("<%= j render 'question_show' %>");
 <% end %>
