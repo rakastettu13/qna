@@ -38,6 +38,7 @@ RSpec.describe QuestionsController, type: :controller do
       subject(:request_for_creation) { post :create, params: { question: attributes_for(:question) } }
 
       it { expect { request_for_creation }.to change(Question, :count).by(1) }
+      it { expect { request_for_creation }.to have_broadcasted_to('questions') }
       it { is_expected.to redirect_to controller.question }
     end
 
@@ -45,6 +46,7 @@ RSpec.describe QuestionsController, type: :controller do
       subject(:request_for_creation) { post :create, params: { question: attributes_for(:question, :invalid) } }
 
       it { expect { request_for_creation }.not_to change(Question, :count) }
+      it { expect { request_for_creation }.not_to have_broadcasted_to('questions') }
       it { is_expected.to render_template :new }
     end
   end
