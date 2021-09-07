@@ -8,6 +8,7 @@ class QuestionsController < ApplicationController
   expose :questions, -> { Question.all }
   expose :question, find: -> { Question.with_attached_files.find(params[:id]) }
   expose :answer, -> { question.answers.build }
+  expose :comment, -> { Comment.new }
 
   def new
     question.links.build

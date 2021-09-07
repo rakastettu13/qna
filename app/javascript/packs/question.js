@@ -12,4 +12,8 @@ $(document).on("turbolinks:load", () => {
   if(question[0]) {
     showAll($('.best-link'))
   };
+
+  $(document).on('ajax:error', (event) => {
+    $(event.target.parentElement).find('.errors').html(event.detail[0])
+  })
 });

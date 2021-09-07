@@ -27,3 +27,9 @@
     .answer-update-errors
 
     = render 'answers/form', form_model: answer, form_class: "edit-#{answer.id} hidden", form_submit: 'Save'
+
+    p.comments-cell
+      .comments
+        = render answer.comments
+      .errors
+      = render 'comments/form', resource: answer, comment: answer.comments.build

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_210_830_011_154) do
+ActiveRecord::Schema.define(version: 20_210_907_023_009) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
@@ -64,6 +64,17 @@ ActiveRecord::Schema.define(version: 20_210_830_011_154) do
     t.index ['question_id'], name: 'index_answers_on_question_id'
   end
 
+  create_table 'comments', force: :cascade do |t|
+    t.string 'body'
+    t.bigint 'author_id', null: false
+    t.string 'commentable_type', null: false
+    t.bigint 'commentable_id', null: false
+    t.datetime 'created_at', precision: 6, null: false
+    t.datetime 'updated_at', precision: 6, null: false
+    t.index ['author_id'], name: 'index_comments_on_author_id'
+    t.index %w[commentable_type commentable_id], name: 'index_comments_on_commentable'
+  end
+
   create_table 'links', force: :cascade do |t|
     t.string 'name', null: false
     t.string 'url', null: false
@@ -109,6 +120,7 @@ ActiveRecord::Schema.define(version: 20_210_830_011_154) do
   add_foreign_key 'active_storage_variant_records', 'active_storage_blobs', column: 'blob_id'
   add_foreign_key 'answers', 'questions'
   add_foreign_key 'answers', 'users', column: 'author_id'
+  add_foreign_key 'comments', 'users', column: 'author_id'
   add_foreign_key 'questions', 'users', column: 'author_id'
   add_foreign_key 'votes', 'users'
 end

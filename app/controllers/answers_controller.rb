@@ -47,12 +47,11 @@ class AnswersController < ApplicationController
   def publish_answer
     return unless answer.persisted?
 
-    ActionCable.server.broadcast(
-      "questions/#{question.id}",
-      ApplicationController.render(
-        partial: 'answers/answer',
-        locals: { answer: answer, current_user: nil }
-      )
-    )
+    ActionCable.server.broadcast("questions/#{question.id}",
+                                 { css: 'answers',
+                                   template: ApplicationController.render(partial: 'answers/answer',
+                                                                          locals: {
+                                                                            answer: answer, current_user: nil
+                                                                          }) })
   end
 end
