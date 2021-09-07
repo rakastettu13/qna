@@ -15,13 +15,6 @@ RSpec.describe CommentsController, type: :controller do
 
       it { expect { request_for_creation }.to change(resource.comments, :count).by(1) }
       it { expect { request_for_creation }.to have_broadcasted_to("questions/#{resource.id}") }
-
-      describe 'response' do
-        before { request_for_creation }
-
-        it { expect(response.header['Content-Type']).to include 'application/json' }
-        it { expect(response.body).to include 'Comment body' }
-      end
     end
 
     context 'with invalid attributes' do

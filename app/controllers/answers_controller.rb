@@ -10,7 +10,7 @@ class AnswersController < ApplicationController
 
   def create
     answer.author = current_user
-    answer.save
+    render json: answer.errors.full_messages, status: :unprocessable_entity unless answer.save
   end
 
   def update

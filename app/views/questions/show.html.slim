@@ -5,8 +5,9 @@ table
     td.answers-cell*{valign: 'top'}
       .answers
         = render question.answers.with_attached_files
-      .answer-create-errors
-      = render 'answers/form', form_model: [question, answer], form_class: '', form_submit: 'Reply'
+      .create
+        .errors
+        = render 'answers/form', form_model: [question, answer], form_class: '', form_submit: 'Reply'
 
     td.comments-cell*{valign: 'top', class: "question-#{question.id}"}
       .comments

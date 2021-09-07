@@ -8,11 +8,7 @@ class CommentsController < ApplicationController
 
   def create
     comment.author = current_user
-    if comment.save
-      render json: comment
-    else
-      render json: comment.errors.full_messages, status: :unprocessable_entity
-    end
+    render json: comment.errors.full_messages, status: :unprocessable_entity unless comment.save
   end
 
   private

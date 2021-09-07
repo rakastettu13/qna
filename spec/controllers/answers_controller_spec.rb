@@ -17,7 +17,6 @@ RSpec.describe AnswersController, type: :controller do
 
       it { expect { request_for_creation }.to change(question.answers, :count).by(1) }
       it { expect { request_for_creation }.to have_broadcasted_to("questions/#{question.id}") }
-      it { is_expected.to render_template :create }
     end
 
     context 'with invalid attributes' do
@@ -27,7 +26,13 @@ RSpec.describe AnswersController, type: :controller do
 
       it { expect { request_for_creation }.not_to change(Answer, :count) }
       it { expect { request_for_creation }.not_to have_broadcasted_to("questions/#{question.id}") }
-      it { is_expected.to render_template :create }
+
+      describe 'response' do
+        before { request_for_creation }
+
+        it { expect(response.header['Content-Type']).to include 'application/json' }
+        it { expect(response.body).to include "Body can't be blank" }
+      end
     end
   end
 
