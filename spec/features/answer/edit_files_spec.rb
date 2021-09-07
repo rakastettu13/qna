@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Only author of answer can edit or delete the attached files.', type: :feature do
+RSpec.feature 'Only author of answer can edit or delete the attached files.', type: :feature, js: true do
   subject(:comment) { find('.answer-body') }
 
   given(:user) { create(:user) }
@@ -26,7 +26,7 @@ RSpec.feature 'Only author of answer can edit or delete the attached files.', ty
       end
     end
 
-    scenario 'tries to delete attached files', js: true do
+    scenario 'tries to delete attached files' do
       within '.answer-files' do
         expect(page).to have_link 'README.md'
 

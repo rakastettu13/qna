@@ -2,6 +2,8 @@ class AnswersController < ApplicationController
   include VotedFor
 
   before_action :authenticate_user!
+  before_action :gon_variables, only: :create
+  after_action :publish_answer, only: :create
 
   expose :question, -> { find_question }
   expose :answer, build: -> { question.answers.build(answer_params) }
@@ -35,5 +37,22 @@ class AnswersController < ApplicationController
     else
       answer.question
     end
+  end
+
+  def gon_variables
+    gon.user_id = current_user&.id
+    gon.question_id = question.id
+  end
+
+  def publish_answer
+    return unless answer.persisted?
+
+    ActionCable.server.broadcast(
+      "questions/#{question.id}",
+      ApplicationController.render(
+        partial: 'answers/answer',
+        locals: { answer: answer, current_user: nil }
+      )
+    )
   end
 end

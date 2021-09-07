@@ -1,20 +1,20 @@
 module ApplicationHelper
   def link_to_delete(resource)
-    return unless resource.persisted? && current_user&.author_of?(resource)
+    return unless resource.persisted?
 
     link_to "Delete the #{resource.class.to_s.downcase}",
             polymorphic_path(resource),
-            class: 'delete-link',
+            class: 'delete-link hidden',
             method: :delete,
             remote: true
   end
 
   def link_to_edit(resource)
-    return unless resource.persisted? && current_user&.author_of?(resource)
+    return unless resource.persisted?
 
     link_to "Edit the #{resource.class.to_s.downcase}",
             '#',
-            class: 'edit-link',
+            class: 'edit-link hidden',
             data: { id: resource.id }
   end
 
@@ -23,12 +23,8 @@ module ApplicationHelper
 
     resource.files.each do |file|
       concat link_to(file.filename.to_s, file, target: 'blank', rel: 'nofollow', class: "file-#{file.id}")
-
-      if current_user&.author_of?(resource)
-        concat link_to("\u274c", attachment_path(file), method: :delete, remote: true,
-                                                        class: "delete-file file-#{file.id}")
-      end
-
+      concat link_to("\u274c", attachment_path(file), method: :delete, remote: true,
+                                                      class: "delete-file file-#{file.id} hidden")
       concat ' '
     end
   end
@@ -49,7 +45,7 @@ module ApplicationHelper
     end
   end
 
-  def voting_links(resource)
+  def voting_links(resource, current_user)
     if current_user&.author_of?(resource)
       concat content_tag :span, resource.rating, class: 'rating'
     elsif current_user&.voted_for?(resource)

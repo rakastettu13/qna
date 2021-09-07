@@ -16,6 +16,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it { expect { request_for_creation }.to change(question.answers, :count).by(1) }
+      it { expect { request_for_creation }.to have_broadcasted_to("questions/#{question.id}") }
       it { is_expected.to render_template :create }
     end
 
@@ -25,6 +26,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it { expect { request_for_creation }.not_to change(Answer, :count) }
+      it { expect { request_for_creation }.not_to have_broadcasted_to("questions/#{question.id}") }
       it { is_expected.to render_template :create }
     end
   end

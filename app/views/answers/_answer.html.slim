@@ -1,7 +1,7 @@
 = javascript_pack_tag "answer"
 
 - if answer.persisted?
-  div class="answer-#{answer.id}"
+  div class="answer-#{answer.id} answer-author-#{answer.author.id}"
     - if answer.best
         = 'Best answer'
 
@@ -12,7 +12,7 @@
     ul.answer-links
       = attached_links(answer)
 
-    = render 'shared/voting', resource: answer
+    = render 'shared/voting', resource: answer, current_user: current_user
 
     p
       = answer.author.email
