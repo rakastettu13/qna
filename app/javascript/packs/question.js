@@ -1,17 +1,16 @@
-import {EditingHelper} from 'utilities/editing_helper';
-import {CreatingHelper} from 'utilities/creating_helper';
+import {FormHelper} from 'utilities/form_helper';
 import {showAll} from "utilities/links_handler.js";
 import {showAllFor} from "utilities/links_handler.js";
 
 $(document).on("turbolinks:load", () => {
-  EditingHelper.call($('.show-question'))
-  CreatingHelper.call($('.comments-cell'))
+  FormHelper.call($('.show-question, .answers'), 'edit')
+  FormHelper.call($('.comments-cell'), 'create')
 
-  const question = $(`.question-author-${gon.user_id}`);
+  const id = gon.user_id
 
-  showAllFor(question);
+  showAllFor($(`.question-author-${id}, .answer-author-${id}`));
 
-  if(question[0]) {
+  if($(`.question-author-${id}`)[0]) {
     showAll($('.best-link'))
   };
 
