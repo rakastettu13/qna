@@ -4,6 +4,9 @@
   div class="answer-#{answer.id} answer-author-#{answer.author.id}"
     - if answer.best
         = 'Best answer'
+    - else
+      = link_to_best(answer)
+
 
     p.answer-body
       = answer.body
@@ -20,16 +23,13 @@
       =< link_to_delete(answer)
       =< link_to_edit(answer)
 
-    - unless answer.best
-      p
-        = link_to_best(answer)
-
     .answer-update-errors
 
     = render 'answers/form', form_model: answer, form_class: "edit-#{answer.id} hidden", form_submit: 'Save'
 
-    p.comments-cell
+    .comments-cell
       .comments
         = render answer.comments
       .errors
-      = render 'comments/form', resource: answer, comment: answer.comments.build
+      = link_to 'Add comment', '', class: "create-link #{answer.id}", data: { id: answer.id }
+      = render 'comments/form', resource: answer, comment: answer.comments.build, form_class: "create-#{answer.id} hidden"

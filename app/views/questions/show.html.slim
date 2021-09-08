@@ -13,4 +13,5 @@ table
       .comments
         = render question.comments
       .errors
-      = render 'comments/form', resource: question
+      = link_to 'Add comment', '', class: "create-link #{question.id}", data: { id: question.id }
+      = render 'comments/form', resource: question, form_class: "create-#{question.id} hidden"

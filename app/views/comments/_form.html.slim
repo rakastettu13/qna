@@ -1,7 +1,7 @@
-= form_with model: [resource, comment], local: false do |f|
+= form_with model: [resource, comment], class: form_class, local: false do |f|
 
   .field
     = f.label :body, 'Comment'
     =< f.text_area :body
 
-  = f.submit "Add comment"
+  = f.submit "Send"

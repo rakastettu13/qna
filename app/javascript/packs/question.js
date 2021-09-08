@@ -1,9 +1,11 @@
 import {EditingHelper} from 'utilities/editing_helper';
+import {CreatingHelper} from 'utilities/creating_helper';
 import {showAll} from "utilities/links_handler.js";
 import {showAllFor} from "utilities/links_handler.js";
 
 $(document).on("turbolinks:load", () => {
   EditingHelper.call($('.show-question'))
+  CreatingHelper.call($('.comments-cell'))
 
   const question = $(`.question-author-${gon.user_id}`);
 
@@ -19,6 +21,5 @@ $(document).on("turbolinks:load", () => {
 
   $(document).on('ajax:success', (event) => {
     $(event.target).find('textarea').val('')
-    console.log($(event.target).find('textarea'))
   })
 });

@@ -7,8 +7,9 @@ RSpec.shared_examples 'comment', js: true do |space|
 
     scenario 'tries to add comment' do
       within(space) do
-        fill_in 'Comment', with: 'Comment text'
         click_on 'Add comment'
+        fill_in 'Comment', with: 'Comment text'
+        click_on 'Send'
 
         expect(page).to have_content 'Comment text'
       end
@@ -17,6 +18,7 @@ RSpec.shared_examples 'comment', js: true do |space|
     scenario 'tries to add comment with errors' do
       within(space) do
         click_on 'Add comment'
+        click_on 'Send'
 
         expect(page).to have_content "Body can't be blank"
       end
@@ -28,6 +30,7 @@ RSpec.shared_examples 'comment', js: true do |space|
 
     within(space) do
       click_on 'Add comment'
+      click_on 'Send'
       expect(page).to have_content 'You need to sign in or sign up before continuing.'
     end
   end
@@ -44,8 +47,9 @@ RSpec.shared_examples 'comment', js: true do |space|
 
     Capybara.using_session('user') do
       within(space) do
-        fill_in 'Comment', with: 'Comment text'
         click_on 'Add comment'
+        fill_in 'Comment', with: 'Comment text'
+        click_on 'Send'
 
         expect(page).to have_content 'Comment text'
       end
