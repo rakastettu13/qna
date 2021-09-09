@@ -26,6 +26,7 @@ gem 'jbuilder', '~> 2.7'
 # gem 'image_processing', '~> 1.2'
 
 gem 'bootsnap', '>= 1.4.4', require: false
+gem 'cancancan'
 gem 'cocoon'
 gem 'decent_exposure', '~> 3.0'
 gem 'devise'
