@@ -1,9 +1,10 @@
-= javascript_pack_tag "answer"
-
 - if answer.persisted?
-  div class="answer-#{answer.id}"
+  div class="answer-#{answer.id} answer-author-#{answer.author.id}"
     - if answer.best
         = 'Best answer'
+    - else
+      = link_to_best(answer)
+
 
     p.answer-body
       = answer.body
@@ -12,7 +13,7 @@
     ul.answer-links
       = attached_links(answer)
 
-    = render 'shared/voting', resource: answer
+    = render 'shared/voting', resource: answer, current_user: current_user
 
     p
       = answer.author.email
@@ -20,10 +21,13 @@
       =< link_to_delete(answer)
       =< link_to_edit(answer)
 
-    - unless answer.best
-      p
-        = link_to_best(answer)
-
     .answer-update-errors
 
     = render 'answers/form', form_model: answer, form_class: "edit-#{answer.id} hidden", form_submit: 'Save'
+
+    .comments-cell
+      .comments
+        = render answer.comments
+      .errors
+      = link_to 'Add comment', '', class: "create-link #{answer.id}", data: { id: answer.id }
+      = render 'comments/form', resource: answer, comment: answer.comments.build, form_class: "create-#{answer.id} hidden"

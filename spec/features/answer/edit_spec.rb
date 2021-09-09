@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.feature 'Only author can edit the answer.', type: :feature do
+RSpec.feature 'Only author can edit the answer.', type: :feature, js: true do
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
   given(:question) { create(:question, author: user) }
   given!(:answer) { create(:answer, author: user, question: question) }
 
-  describe 'Author', js: true do
+  describe 'Author' do
     background { sign_in(user) }
 
     background do

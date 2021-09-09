@@ -9,11 +9,4 @@ table.questions
     th
       | Count of answers
 
-  - questions.each do |question|
-    tr
-      td
-        = link_to question.title, question_path(question)
-      td
-        = question.body.truncate(25)
-      td
-        = question.answers.count
+  = render questions

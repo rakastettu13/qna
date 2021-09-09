@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 RSpec.feature 'Only authenticated user can ask a question.', type: :feature do
-  describe 'Authenticated user' do
-    given(:user) { create(:user) }
+  given(:user) { create(:user) }
 
+  describe 'Authenticated user' do
     background { sign_in(user) }
+
     background do
       visit questions_path
       click_on 'Ask question'
@@ -44,5 +45,29 @@ RSpec.feature 'Only authenticated user can ask a question.', type: :feature do
     click_on 'Ask question'
 
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
+  end
+
+  scenario 'All users on questions_path should see the created question', js: true do
+    Capybara.using_session('user') do
+      sign_in(user)
+      visit new_question_path
+    end
+
+    Capybara.using_session('guest') do
+      visit questions_path
+    end
+
+    Capybara.using_session('user') do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'Some text'
+      click_on 'Ask'
+
+      expect(page).to have_content 'Test question'
+      expect(page).to have_content 'Some text'
+    end
+
+    Capybara.using_session('guest') do
+      expect(page).to have_content 'Test question'
+    end
   end
 end

@@ -5,6 +5,7 @@ RSpec.describe Answer, type: :model do
   it { is_expected.to belong_to(:author).class_name('User') }
   it { is_expected.to have_many(:links).dependent(:destroy) }
   it { is_expected.to have_many(:votes).dependent(:destroy) }
+  it { is_expected.to have_many(:comments).dependent(:destroy) }
 
   it { is_expected.to accept_nested_attributes_for(:links).allow_destroy(true) }
 

@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.feature 'Only author can delete his answer.', type: :feature do
+RSpec.feature 'Only author can delete his answer.', type: :feature, js: true do
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
   given(:question) { create(:question, author: user) }
   given!(:answer) { create(:answer, author: user, question: question) }
 
-  scenario 'Author tries to delete the answer', js: true do
+  scenario 'Author tries to delete the answer' do
     sign_in(user)
     visit question_path(question)
 

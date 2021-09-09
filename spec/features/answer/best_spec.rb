@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.feature 'Only the author of the question can choose the best answer.', type: :feature do
+RSpec.feature 'Only the author of the question can choose the best answer.', type: :feature, js: true do
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
   given(:question) { create(:question, author: user) }
   given!(:answer) { create(:answer, question: question) }
 
-  describe 'Author of questionr', js: true do
+  describe 'Author of questionr' do
     given!(:another_answer) { create(:answer, body: 'another answer body', question: question) }
 
     background { sign_in(user) }

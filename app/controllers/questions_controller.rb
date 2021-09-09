@@ -2,10 +2,13 @@ class QuestionsController < ApplicationController
   include VotedFor
 
   before_action :authenticate_user!, except: %i[index show]
+  before_action :gon_variables, only: :show
+  after_action :publish_question, only: :create
 
   expose :questions, -> { Question.all }
   expose :question, find: -> { Question.with_attached_files.find(params[:id]) }
   expose :answer, -> { question.answers.build }
+  expose :comment, -> { Comment.new }
 
   def new
     question.links.build
@@ -45,5 +48,17 @@ class QuestionsController < ApplicationController
                                      files: [],
                                      links_attributes: %i[id name url _destroy],
                                      achievement_attributes: %i[id name image])
+  end
+
+  def gon_variables
+    gon.user_id = current_user&.id
+    gon.question_id = question.id
+  end
+
+  def publish_question
+    return unless question.persisted?
+
+    ActionCable.server.broadcast('questions', ApplicationController.render(partial: 'questions/question',
+                                                                           locals: { question: question }))
   end
 end

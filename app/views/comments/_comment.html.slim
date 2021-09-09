@@ -1,0 +1,6 @@
+- if comment.persisted?
+  p.comment-body
+    = comment.body
+  p
+    = comment.author.email
+    =< comment.created_at
