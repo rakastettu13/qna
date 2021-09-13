@@ -22,17 +22,21 @@ RSpec.describe Ability, type: :model do
     context 'when author' do
       let(:question) { create(:question, author: user) }
       let(:answer) { create(:answer, author: user) }
+      let(:attachment) { create(:question_with_attachments, author: user).files.last }
 
       it { is_expected.to be_able_to %i[update destroy], question }
       it { is_expected.to be_able_to %i[update destroy], answer }
+      it { is_expected.to be_able_to %i[destroy], attachment }
     end
 
     context 'when not author' do
       let(:question) { create(:question) }
       let(:answer) { create(:answer) }
+      let(:attachment) { create(:question_with_attachments).files.last }
 
       it { is_expected.not_to be_able_to %i[update destroy], question }
       it { is_expected.not_to be_able_to %i[update destroy], answer }
+      it { is_expected.not_to be_able_to %i[destroy], attachment }
     end
   end
 end
