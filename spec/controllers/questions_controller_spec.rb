@@ -83,7 +83,6 @@ RSpec.describe QuestionsController, type: :controller do
 
       it { expect { question.reload }.not_to change(question, :title) }
       it { expect { question.reload }.not_to change(question, :body) }
-      it { is_expected.to render_template :update }
     end
   end
 
@@ -101,7 +100,6 @@ RSpec.describe QuestionsController, type: :controller do
       let!(:question) { create(:question) }
 
       it { expect { deletion_request }.not_to change(Question, :count) }
-      it { is_expected.to render_template :show }
     end
   end
 end

@@ -29,16 +29,16 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    question.update(question_params) if current_user.author_of?(question)
+    authorize! :update, question
+
+    question.update(question_params)
   end
 
   def destroy
-    if current_user.author_of?(question)
-      question.destroy
-      redirect_to questions_path, notice: 'Your question successfully deleted.'
-    else
-      render :show
-    end
+    authorize! :destroy, question
+
+    question.destroy
+    redirect_to questions_path, notice: 'Your question successfully deleted.'
   end
 
   private
