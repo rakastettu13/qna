@@ -61,7 +61,6 @@ RSpec.describe AnswersController, type: :controller do
       before { patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js }
 
       it { expect { answer.reload }.not_to change(answer, :body) }
-      it { expect(response).to render_template :update }
     end
   end
 
@@ -79,7 +78,6 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer) }
 
       it { expect { deletion_request }.not_to change(Answer, :count) }
-      it { is_expected.to render_template :destroy }
     end
   end
 

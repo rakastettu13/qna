@@ -8,7 +8,7 @@ class Ability
 
     return unless user.present?
 
-    can :create, Question
-    can %i[update destroy], Question, author_id: user.id
+    can :create, [Question, Answer]
+    can %i[update destroy], [Question, Answer], author_id: user.id
   end
 end
