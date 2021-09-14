@@ -11,5 +11,11 @@ class Ability
     can :create, [Question, Answer]
     can %i[update destroy], [Question, Answer], author_id: user.id
     can :destroy, ActiveStorage::Attachment, record: { author_id: user.id }
+    can :change_rating, [Question, Answer] do |resource|
+      !user.voted_for?(resource) && !user.author_of?(resource)
+    end
+    can :cancel, [Question, Answer] do |resource|
+      user.voted_for?(resource) && !user.author_of?(resource)
+    end
   end
 end
