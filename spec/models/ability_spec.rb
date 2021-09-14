@@ -15,6 +15,7 @@ RSpec.describe Ability, type: :model do
     it { is_expected.not_to be_able_to :change_rating, Answer }
     it { is_expected.not_to be_able_to :cancel, Question }
     it { is_expected.not_to be_able_to :cancel, Answer }
+    it { is_expected.not_to be_able_to :best, Answer }
   end
 
   describe 'for user' do
@@ -25,6 +26,7 @@ RSpec.describe Ability, type: :model do
     it { is_expected.to be_able_to :read, Question }
     it { is_expected.to be_able_to :create, Question }
     it { is_expected.to be_able_to :create, Answer }
+    it { is_expected.not_to be_able_to :best, answer }
     it { is_expected.not_to be_able_to %i[update destroy], question }
     it { is_expected.not_to be_able_to %i[update destroy], answer }
     it { is_expected.not_to be_able_to %i[destroy], create(:question_with_attachments).files.last }
@@ -51,11 +53,14 @@ RSpec.describe Ability, type: :model do
     let(:user) { create :user }
     let(:question) { create(:question, author: user) }
     let(:answer) { create(:answer, author: user) }
+    let(:question_answer) { create(:answer, author: user, question: question) }
     let(:attachment) { create(:question_with_attachments, author: user).files.last }
 
     it { is_expected.to be_able_to :read, Question }
     it { is_expected.to be_able_to :create, Question }
     it { is_expected.to be_able_to :create, Answer }
+    it { is_expected.to be_able_to :best, question_answer }
+    it { is_expected.not_to be_able_to :best, answer }
     it { is_expected.to be_able_to %i[update destroy], question }
     it { is_expected.to be_able_to %i[update destroy], answer }
     it { is_expected.to be_able_to %i[destroy], attachment }

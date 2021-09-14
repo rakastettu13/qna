@@ -26,7 +26,8 @@ class AnswersController < ApplicationController
   end
 
   def best
-    question.update_best_answer(answer) if current_user.author_of?(question)
+    authorize! :best, answer
+    question.update_best_answer(answer)
   end
 
   private

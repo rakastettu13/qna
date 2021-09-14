@@ -96,7 +96,6 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer) }
 
       it { expect { answer.reload }.not_to change(answer, :best) }
-      it { is_expected.to render_template :best }
     end
   end
 end
