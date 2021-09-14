@@ -28,7 +28,6 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'cancancan'
 gem 'cocoon'
-gem 'decent_exposure', '~> 3.0'
 gem 'devise'
 gem 'gon'
 gem 'octokit', '~>4.0'

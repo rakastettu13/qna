@@ -5,38 +5,30 @@ class QuestionsController < ApplicationController
 
   load_and_authorize_resource
 
+  before_action :set_variables, only: :show
   before_action :gon_variables, only: :show
-  after_action :publish_question, only: :create
-
-  expose :questions, -> { @questions }
-  expose :question, -> { @question }
-  expose :answer, -> { question.answers.build }
-  expose :comment, -> { Comment.new }
 
   def new
-    question.links.build
-    question.build_achievement
-  end
-
-  def show
-    answer.links.build
+    @question.build_achievement
   end
 
   def create
-    question.author = current_user
-    if question.save
-      redirect_to question, notice: 'Your question successfully created.'
+    @question.author = current_user
+
+    if @question.save
+      publish_question
+      redirect_to @question, notice: 'Your question successfully created.'
     else
       render :new
     end
   end
 
   def update
-    question.update(question_params)
+    @question.update(question_params)
   end
 
   def destroy
-    question.destroy
+    @question.destroy
     redirect_to questions_path, notice: 'Your question successfully deleted.'
   end
 
@@ -51,13 +43,20 @@ class QuestionsController < ApplicationController
 
   def gon_variables
     gon.user_id = current_user&.id
-    gon.question_id = question.id
+    gon.question_id = @question.id
   end
 
   def publish_question
-    return unless question.persisted?
-
     ActionCable.server.broadcast('questions', ApplicationController.render(partial: 'questions/question',
-                                                                           locals: { question: question }))
+                                                                           locals: { question: @question }))
+  end
+
+  def set_variables
+    @answer = Answer.new
+    @comment = Comment.new
+    @comments = @question.comments.includes(:author)
+    @answers = @question.answers.with_attached_files.includes(:author,
+                                                              :links,
+                                                              comments: :author)
   end
 end

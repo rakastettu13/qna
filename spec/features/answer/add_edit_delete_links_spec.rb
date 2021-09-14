@@ -13,6 +13,7 @@ RSpec.feature 'The user can attach links when creating and updating an answer, e
 
     scenario 'the user tries to attach links', js: true do
       fill_in 'Body', with: 'Some text'
+      click_on 'add link'
       fill_in 'Name', with: 'example'
       fill_in 'Url', with: 'https://example.com'
       click_on 'add link'
@@ -32,6 +33,7 @@ RSpec.feature 'The user can attach links when creating and updating an answer, e
 
     scenario 'the user tries to attach gist', js: true do
       fill_in 'Body', with: 'Some text'
+      click_on 'add link'
       fill_in 'Name', with: 'test gist'
       fill_in 'Url', with: gist_url
       click_on 'Reply'

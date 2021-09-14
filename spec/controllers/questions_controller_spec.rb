@@ -10,12 +10,8 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'GET #new' do
     before { get :new }
 
-    it 'builds link to question.links' do
-      expect(controller.question.links.first).to be_a_new(Link)
-    end
-
     it 'builds achievement to question' do
-      expect(controller.question.achievement).to be_a_new(Achievement)
+      expect(assigns(:question).achievement).to be_a_new(Achievement)
     end
 
     it { is_expected.to render_template :new }
@@ -26,10 +22,6 @@ RSpec.describe QuestionsController, type: :controller do
 
     before { get :show, params: { id: question } }
 
-    it 'builds link to new answer' do
-      expect(controller.answer.links.first).to be_a_new(Link)
-    end
-
     it { is_expected.to render_template :show }
   end
 
@@ -39,7 +31,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it { expect { request_for_creation }.to change(Question, :count).by(1) }
       it { expect { request_for_creation }.to have_broadcasted_to('questions') }
-      it { is_expected.to redirect_to controller.question }
+      it { is_expected.to redirect_to assigns(:question) }
     end
 
     context 'with invalid attributes' do

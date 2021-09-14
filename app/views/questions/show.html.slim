@@ -4,14 +4,14 @@ table
   tr
     td.answers-cell*{valign: 'top'}
       .answers
-        = render question.answers.with_attached_files
+        = render @answers
       .create
         .errors
-        = render 'answers/form', form_model: [question, answer], form_class: '', form_submit: 'Reply'
+        = render 'answers/form', form_model: [@question, @answer], form_class: '', form_submit: 'Reply'
 
-    td.comments-cell*{valign: 'top', class: "question-#{question.id}"}
+    td.comments-cell*{valign: 'top', class: "question-#{@question.id}"}
       .comments
-        = render question.comments
+        = render @comments
       .errors
-      = link_to 'Add comment', '', class: "create-link #{question.id}", data: { id: question.id }
-      = render 'comments/form', resource: question, form_class: "create-#{question.id} hidden"
+      = link_to 'Add comment', '', class: "create-link #{@question.id}", data: { id: @question.id }
+      = render 'comments/form', form_model: [@question, @comment], form_class: "create-#{@question.id} hidden"

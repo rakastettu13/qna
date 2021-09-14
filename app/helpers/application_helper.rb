@@ -26,7 +26,7 @@ module ApplicationHelper
   end
 
   def attached_links(resource)
-    resource.links.find_each do |link|
+    resource.links.each do |link|
       concat content_tag(:li, link_to(link.name, link.url) + GistService.view(link))
     end
   end

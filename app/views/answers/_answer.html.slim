@@ -11,7 +11,7 @@
     p.answer-files
       - links_to_files(answer)
     ul.answer-links
-      = attached_links(answer)
+      - attached_links(answer)
 
     = render 'shared/voting', resource: answer, current_user: current_user
 
@@ -30,4 +30,4 @@
         = render answer.comments
       .errors
       = link_to 'Add comment', '', class: "create-link #{answer.id}", data: { id: answer.id }
-      = render 'comments/form', resource: answer, comment: answer.comments.build, form_class: "create-#{answer.id} hidden"
+      = render 'comments/form', form_model: [answer, Comment.new], form_class: "create-#{answer.id} hidden"

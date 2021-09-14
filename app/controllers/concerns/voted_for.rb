@@ -1,10 +1,6 @@
 module VotedFor
   extend ActiveSupport::Concern
 
-  included do
-    expose :resource, -> { send controller_name.singularize.to_sym }
-  end
-
   def change_rating
     vote = resource.votes.build(user: current_user, point: params[:point])
 
@@ -19,5 +15,11 @@ module VotedFor
     resource.votes.find_by(user: current_user).destroy
 
     render json: resource.rating
+  end
+
+  private
+
+  def resource
+    instance_variable_get "@#{controller_name.singularize}"
   end
 end

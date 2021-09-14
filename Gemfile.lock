@@ -82,8 +82,6 @@ GEM
     cocoon (1.2.15)
     concurrent-ruby (1.1.9)
     crass (1.0.6)
-    decent_exposure (3.0.4)
-      activesupport (>= 4.0)
     declarative (0.0.20)
     devise (4.8.0)
       bcrypt (~> 3.0)
@@ -381,7 +379,6 @@ DEPENDENCIES
   cancancan
   capybara (>= 3.26)
   cocoon
-  decent_exposure (~> 3.0)
   devise
   factory_bot_rails
   gon
