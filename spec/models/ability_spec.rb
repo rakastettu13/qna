@@ -8,6 +8,7 @@ RSpec.describe Ability, type: :model do
     let(:user) { nil }
 
     it { is_expected.to be_able_to :read, Question }
+    it { is_expected.to be_able_to :read, Achievement }
     it { is_expected.not_to be_able_to %i[create update destroy], Question }
     it { is_expected.not_to be_able_to %i[create update destroy], Answer }
     it { is_expected.not_to be_able_to %i[destroy], ActiveStorage::Attachment }
@@ -16,6 +17,7 @@ RSpec.describe Ability, type: :model do
     it { is_expected.not_to be_able_to :cancel, Question }
     it { is_expected.not_to be_able_to :cancel, Answer }
     it { is_expected.not_to be_able_to :best, Answer }
+    it { is_expected.not_to be_able_to :create, Comment }
   end
 
   describe 'for user' do
@@ -24,8 +26,11 @@ RSpec.describe Ability, type: :model do
     let(:answer) { create(:answer) }
 
     it { is_expected.to be_able_to :read, Question }
+    it { is_expected.to be_able_to :read, Achievement }
+    it { is_expected.to be_able_to :received, Achievement }
     it { is_expected.to be_able_to :create, Question }
     it { is_expected.to be_able_to :create, Answer }
+    it { is_expected.to be_able_to :create, Comment }
     it { is_expected.not_to be_able_to :best, answer }
     it { is_expected.not_to be_able_to %i[update destroy], question }
     it { is_expected.not_to be_able_to %i[update destroy], answer }
@@ -57,8 +62,11 @@ RSpec.describe Ability, type: :model do
     let(:attachment) { create(:question_with_attachments, author: user).files.last }
 
     it { is_expected.to be_able_to :read, Question }
+    it { is_expected.to be_able_to :read, Achievement }
+    it { is_expected.to be_able_to :received, Achievement }
     it { is_expected.to be_able_to :create, Question }
     it { is_expected.to be_able_to :create, Answer }
+    it { is_expected.to be_able_to :create, Comment }
     it { is_expected.to be_able_to :best, question_answer }
     it { is_expected.not_to be_able_to :best, answer }
     it { is_expected.to be_able_to %i[update destroy], question }

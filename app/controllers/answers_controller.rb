@@ -1,12 +1,16 @@
 class AnswersController < ApplicationController
   include VotedFor
 
-  before_action :authenticate_user!
+  before_action :authenticate_user!, only: :create
+
+  load_and_authorize_resource :question
+  load_and_authorize_resource :answer, through: :question, shallow: true
+
   before_action :gon_variables, only: :create
   after_action :publish_answer, only: :create
 
-  expose :question, -> { find_question }
-  expose :answer, build: -> { question.answers.build(answer_params) }
+  expose :question, -> { @question }
+  expose :answer, -> { @answer }
 
   def create
     answer.author = current_user
@@ -14,20 +18,15 @@ class AnswersController < ApplicationController
   end
 
   def update
-    authorize! :update, answer
-
     answer.update(answer_params)
   end
 
   def destroy
-    authorize! :destroy, answer
-
     answer.destroy
   end
 
   def best
-    authorize! :best, answer
-    question.update_best_answer(answer)
+    answer.question.update_best_answer(answer)
   end
 
   private
@@ -52,7 +51,7 @@ class AnswersController < ApplicationController
   def publish_answer
     return unless answer.persisted?
 
-    ActionCable.server.broadcast("questions/#{question.id}",
+    ActionCable.server.broadcast("questions/#{answer.question.id}",
                                  { css: 'answers',
                                    template: ApplicationController.render(partial: 'answers/answer',
                                                                           locals: {

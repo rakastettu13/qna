@@ -1,12 +1,15 @@
 class QuestionsController < ApplicationController
   include VotedFor
 
-  before_action :authenticate_user!, except: %i[index show]
+  before_action :authenticate_user!, only: :new
+
+  load_and_authorize_resource
+
   before_action :gon_variables, only: :show
   after_action :publish_question, only: :create
 
-  expose :questions, -> { Question.all }
-  expose :question, find: -> { Question.with_attached_files.find(params[:id]) }
+  expose :questions, -> { @questions }
+  expose :question, -> { @question }
   expose :answer, -> { question.answers.build }
   expose :comment, -> { Comment.new }
 
@@ -29,14 +32,10 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    authorize! :update, question
-
     question.update(question_params)
   end
 
   def destroy
-    authorize! :destroy, question
-
     question.destroy
     redirect_to questions_path, notice: 'Your question successfully deleted.'
   end

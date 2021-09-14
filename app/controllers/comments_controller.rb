@@ -1,10 +1,15 @@
 class CommentsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, only: :create
+
+  load_resource :question
+  load_resource :answer
+  load_and_authorize_resource :comment, through: %i[question answer]
+
   before_action :gon_variables, only: :create
   after_action :publish_comment, only: :create
 
-  expose :resource, -> { Answer.find_by(id: params[:answer_id]) || Question.find_by(id: params[:question_id]) }
-  expose :comment, build: -> { resource.comments.build(comment_params) }
+  expose :resource, -> { @comment.commentable }
+  expose :comment, -> { @comment }
 
   def create
     comment.author = current_user
