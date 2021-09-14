@@ -1,23 +1,28 @@
 require 'rails_helper'
 require 'cancan/matchers'
 
+RSpec.shared_examples 'read, create' do |verb|
+  it { is_expected.send verb, be_able_to(:received, Achievement) }
+  it { is_expected.send verb, be_able_to(:create, Question) }
+  it { is_expected.send verb, be_able_to(:create, Answer) }
+  it { is_expected.send verb, be_able_to(:create, Comment) }
+end
+
 RSpec.describe Ability, type: :model do
   subject(:ability) { described_class.new(user) }
 
   describe 'for guest' do
     let(:user) { nil }
 
-    it { is_expected.to be_able_to :read, Question }
-    it { is_expected.to be_able_to :read, Achievement }
+    include_examples 'read, create', :not_to
+
+    it { is_expected.to be_able_to :read, :all }
     it { is_expected.not_to be_able_to %i[create update destroy], Question }
     it { is_expected.not_to be_able_to %i[create update destroy], Answer }
     it { is_expected.not_to be_able_to %i[destroy], ActiveStorage::Attachment }
     it { is_expected.not_to be_able_to :change_rating, Question }
     it { is_expected.not_to be_able_to :change_rating, Answer }
-    it { is_expected.not_to be_able_to :cancel, Question }
-    it { is_expected.not_to be_able_to :cancel, Answer }
     it { is_expected.not_to be_able_to :best, Answer }
-    it { is_expected.not_to be_able_to :create, Comment }
   end
 
   describe 'for user' do
@@ -25,12 +30,9 @@ RSpec.describe Ability, type: :model do
     let(:question) { create(:question) }
     let(:answer) { create(:answer) }
 
-    it { is_expected.to be_able_to :read, Question }
-    it { is_expected.to be_able_to :read, Achievement }
-    it { is_expected.to be_able_to :received, Achievement }
-    it { is_expected.to be_able_to :create, Question }
-    it { is_expected.to be_able_to :create, Answer }
-    it { is_expected.to be_able_to :create, Comment }
+    include_examples 'read, create', :to
+
+    it { is_expected.to be_able_to :read, :all }
     it { is_expected.not_to be_able_to :best, answer }
     it { is_expected.not_to be_able_to %i[update destroy], question }
     it { is_expected.not_to be_able_to %i[update destroy], answer }
@@ -61,12 +63,9 @@ RSpec.describe Ability, type: :model do
     let(:question_answer) { create(:answer, author: user, question: question) }
     let(:attachment) { create(:question_with_attachments, author: user).files.last }
 
-    it { is_expected.to be_able_to :read, Question }
-    it { is_expected.to be_able_to :read, Achievement }
-    it { is_expected.to be_able_to :received, Achievement }
-    it { is_expected.to be_able_to :create, Question }
-    it { is_expected.to be_able_to :create, Answer }
-    it { is_expected.to be_able_to :create, Comment }
+    include_examples 'read, create', :to
+
+    it { is_expected.to be_able_to :read, :all }
     it { is_expected.to be_able_to :best, question_answer }
     it { is_expected.not_to be_able_to :best, answer }
     it { is_expected.to be_able_to %i[update destroy], question }
