@@ -24,7 +24,7 @@ RSpec.shared_examples 'voting' do |votable|
         before { change_rating }
 
         it { expect(response.header['Content-Type']).to include 'application/json' }
-        it { expect(response.body).to include 'User cannot be the author of votable' }
+        it { expect(response.body).to include 'You are not authorized to access this page' }
       end
     end
   end

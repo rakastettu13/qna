@@ -1,14 +1,18 @@
 class CommentsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :gon_variables, only: :create
-  after_action :publish_comment, only: :create
+  before_action :authenticate_user!, only: :create
 
-  expose :resource, -> { Answer.find_by(id: params[:answer_id]) || Question.find_by(id: params[:question_id]) }
-  expose :comment, build: -> { resource.comments.build(comment_params) }
+  load_resource :question
+  load_resource :answer
+  load_and_authorize_resource :comment, through: %i[question answer]
 
   def create
-    comment.author = current_user
-    render json: comment.errors.full_messages, status: :unprocessable_entity unless comment.save
+    @comment.author = current_user
+
+    if @comment.save
+      publish_comment
+    else
+      render_errors(@comment)
+    end
   end
 
   private
@@ -18,19 +22,21 @@ class CommentsController < ApplicationController
   end
 
   def publish_comment
-    return unless comment.persisted?
-
-    ActionCable.server.broadcast("questions/#{gon.question_id}",
+    ActionCable.server.broadcast("questions/#{question_id}",
                                  { css: "#{resource.class}-#{resource.id} .comments".downcase,
                                    template: ApplicationController.render(partial: 'comments/comment',
-                                                                          locals: { comment: comment }) })
+                                                                          locals: { comment: @comment }) })
   end
 
-  def gon_variables
-    gon.question_id = if resource.instance_of?(Question)
-                        resource.id
-                      else
-                        resource.question.id
-                      end
+  def question_id
+    if resource.instance_of?(Question)
+      resource.id
+    else
+      resource.question.id
+    end
+  end
+
+  def resource
+    @comment.commentable
   end
 end

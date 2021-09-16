@@ -52,7 +52,11 @@ RSpec.describe AnswersController, type: :controller do
       before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js }
 
       it { expect { answer.reload }.not_to change(answer, :body) }
-      it { is_expected.to render_template :update }
+
+      describe 'response' do
+        it { expect(response.header['Content-Type']).to include 'application/json' }
+        it { expect(response.body).to include "Body can't be blank" }
+      end
     end
 
     context 'when the user is not the author' do
@@ -61,7 +65,6 @@ RSpec.describe AnswersController, type: :controller do
       before { patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js }
 
       it { expect { answer.reload }.not_to change(answer, :body) }
-      it { expect(response).to render_template :update }
     end
   end
 
@@ -79,7 +82,6 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer) }
 
       it { expect { deletion_request }.not_to change(Answer, :count) }
-      it { is_expected.to render_template :destroy }
     end
   end
 
@@ -98,7 +100,6 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer) }
 
       it { expect { answer.reload }.not_to change(answer, :best) }
-      it { is_expected.to render_template :best }
     end
   end
 end

@@ -31,5 +31,9 @@ FactoryBot.define do
         question.reload
       end
     end
+
+    factory :question_with_attachments do
+      files { [Rack::Test::UploadedFile.new(Rails.root.join('README.md'))] }
+    end
   end
 end

@@ -1,5 +1,1 @@
-$('.answer-<%= "#{answer.id}" %> > .answer-update-errors').html('<%= render 'shared/errors', resource: answer %>');
-
-<% unless answer.errors.present? %>
-  $('.answer-<%= "#{answer.id}" %>').replaceWith('<%= j render answer %>');
-<% end %>
+$('.answer-<%= "#{@answer.id}" %>').replaceWith('<%= j render @answer %>');

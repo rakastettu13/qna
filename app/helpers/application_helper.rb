@@ -1,7 +1,5 @@
 module ApplicationHelper
   def link_to_delete(resource)
-    return unless resource.persisted?
-
     link_to "Delete the #{resource.class.to_s.downcase}",
             polymorphic_path(resource),
             class: 'delete-link hidden',
@@ -10,8 +8,6 @@ module ApplicationHelper
   end
 
   def link_to_edit(resource)
-    return unless resource.persisted?
-
     link_to "Edit the #{resource.class.to_s.downcase}",
             '#',
             class: 'edit-link hidden',
@@ -30,7 +26,7 @@ module ApplicationHelper
   end
 
   def attached_links(resource)
-    resource.links.find_each do |link|
+    resource.links.each do |link|
       concat content_tag(:li, link_to(link.name, link.url) + GistService.view(link))
     end
   end
@@ -46,12 +42,14 @@ module ApplicationHelper
   end
 
   def voting_links(resource, current_user)
-    if current_user&.author_of?(resource)
-      concat content_tag :span, resource.rating, class: 'rating'
-    elsif current_user&.voted_for?(resource)
+    return rating(resource) unless current_user
+
+    if can? :change_rating, resource
+      voting(resource)
+    elsif can? :cancel, resource
       cancel(resource)
     else
-      voting(resource)
+      rating(resource)
     end
   end
 
@@ -61,7 +59,7 @@ module ApplicationHelper
     concat link_to '+', polymorphic_path([:change_rating, resource], point: +1),
                    method: :patch, remote: true, data: { type: :json }, class: 'voting-link hidden'
 
-    concat content_tag :span, resource.rating, class: 'rating'
+    rating(resource)
 
     concat link_to '–', polymorphic_path([:change_rating, resource], point: -1),
                    method: :patch, remote: true, data: { type: :json }, class: 'voting-link hidden'
@@ -74,12 +72,16 @@ module ApplicationHelper
     concat link_to '+', polymorphic_path([:change_rating, resource], point: +1),
                    method: :patch, remote: true, data: { type: :json }, class: 'voting-link'
 
-    concat content_tag :span, resource.rating, class: 'rating'
+    rating(resource)
 
     concat link_to '–', polymorphic_path([:change_rating, resource], point: -1),
                    method: :patch, remote: true, data: { type: :json }, class: 'voting-link'
 
     concat link_to 'cancel', polymorphic_path([:cancel, resource]),
                    method: :delete, remote: true, data: { type: :json }, class: 'cancel-link hidden'
+  end
+
+  def rating(resource)
+    concat content_tag :span, resource.rating, class: 'rating'
   end
 end
