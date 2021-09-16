@@ -19,6 +19,6 @@
     = link_to_delete(@question)
     =< link_to_edit(@question)
 
-  .question-update-errors
-
-  = render 'form', local: false, form_class: "edit-#{@question.id} hidden", form_submit: 'Save'
+  .edit
+    .errors
+    = render 'form', local: false, form_class: "edit-#{@question.id} hidden", form_submit: 'Save'

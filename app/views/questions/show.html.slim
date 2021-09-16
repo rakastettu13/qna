@@ -12,6 +12,7 @@ table
     td.comments-cell*{valign: 'top', class: "question-#{@question.id}"}
       .comments
         = render @comments
-      .errors
-      = link_to 'Add comment', '', class: "create-link #{@question.id}", data: { id: @question.id }
-      = render 'comments/form', form_model: [@question, @comment], form_class: "create-#{@question.id} hidden"
+      .create
+        .errors
+        = link_to 'Add comment', '', class: "create-link #{@question.id}", data: { id: @question.id }
+        = render 'comments/form', form_model: [@question, @comment], form_class: "create-#{@question.id} hidden"

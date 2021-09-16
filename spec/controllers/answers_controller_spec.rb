@@ -52,7 +52,11 @@ RSpec.describe AnswersController, type: :controller do
       before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js }
 
       it { expect { answer.reload }.not_to change(answer, :body) }
-      it { is_expected.to render_template :update }
+
+      describe 'response' do
+        it { expect(response.header['Content-Type']).to include 'application/json' }
+        it { expect(response.body).to include "Body can't be blank" }
+      end
     end
 
     context 'when the user is not the author' do

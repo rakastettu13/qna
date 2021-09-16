@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
     if @comment.save
       publish_comment
     else
-      render json: @comment.errors.full_messages, status: :unprocessable_entity
+      render_errors(@comment)
     end
   end
 

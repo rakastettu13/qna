@@ -17,7 +17,7 @@ class AnswersController < ApplicationController
   end
 
   def update
-    @answer.update(answer_params)
+    render_errors(@answer) unless @answer.update(answer_params)
   end
 
   def destroy

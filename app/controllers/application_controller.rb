@@ -8,4 +8,10 @@ class ApplicationController < ActionController::Base
   end
 
   check_authorization unless: :devise_controller?
+
+  private
+
+  def render_errors(resource)
+    render json: resource.errors.full_messages, status: :unprocessable_entity
+  end
 end
