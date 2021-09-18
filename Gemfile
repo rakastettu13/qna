@@ -29,6 +29,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'cancancan'
 gem 'cocoon'
 gem 'devise'
+gem 'doorkeeper'
 gem 'gon'
 gem 'octokit', '~>4.0'
 gem 'slim-rails'
