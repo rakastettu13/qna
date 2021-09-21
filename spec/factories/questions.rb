@@ -33,7 +33,10 @@ FactoryBot.define do
     end
 
     factory :question_with_attachments do
-      files { [Rack::Test::UploadedFile.new(Rails.root.join('README.md'))] }
+      files do
+        [Rack::Test::UploadedFile.new(Rails.root.join('spec/rails_helper.rb')),
+         Rack::Test::UploadedFile.new(Rails.root.join('spec/spec_helper.rb'))]
+      end
     end
   end
 end

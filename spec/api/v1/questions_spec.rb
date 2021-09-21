@@ -1,6 +1,7 @@
 require 'rails_helper'
 
-describe 'Profiles API', type: :request do
+describe 'Questions API', type: :request do
+  let(:access_token) { create(:access_token).token }
   let(:headers) { { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' } }
 
   describe 'GET /api/v1/questions' do
@@ -11,41 +12,45 @@ describe 'Profiles API', type: :request do
     end
 
     context 'when access_token is valid' do
-      let(:access_token) { create(:access_token).token }
-      let!(:questions) { create_list(:question, 3) }
-      let(:question) { questions.first }
-      let(:question_json) { json['questions'].first }
-      let!(:answers) { create_list(:answer, 3, question: question) }
-      let(:answer) { answers.first }
-      let(:answer_json) { question_json['answers'].first }
+      let(:questions) { create_list(:question_with_attachments, 2) }
+      let!(:answer) { create_list(:answer, 2, question: question).first }
+      let!(:comment) { create_list(:comment, 2, :for_question, commentable: question).first }
+      let!(:link) { create_list(:link, 2, :for_question, linkable: question).first }
 
       before { get api_path, params: { access_token: access_token }, headers: headers }
 
       it { expect(response).to be_successful }
 
       it 'returns list of questions' do
-        expect(json['questions'].size).to eq 3
+        expect(json['questions'].size).to eq 2
       end
 
-      it 'returns all public fields for question' do
-        %w[id title body created_at updated_at].each do |attr|
-          expect(question_json[attr]).to eq question.send(attr).as_json
-        end
+      include_examples 'question api' do
+        let(:question) { questions.first }
+        let(:question_json) { json['questions'].first }
       end
+    end
+  end
 
-      include_examples 'user fields' do
-        let(:user) { question.author }
-        let(:user_json) { question_json['author'] }
-      end
+  describe 'GET /api/v1/questions/id' do
+    let(:question) { create(:question_with_attachments) }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
 
-      it 'returns list of answers' do
-        expect(question_json['answers'].size).to eq 3
-      end
+    it_behaves_like 'API authorizable' do
+      let(:method) { :get }
+    end
 
-      it 'returns all public fields for answers' do
-        %w[id body best question_id author_id created_at updated_at].each do |attr|
-          expect(answer_json[attr]).to eq answer.send(attr).as_json
-        end
+    context 'when access_token is valid' do
+      let!(:answer) { create_list(:answer, 2, question: question).first }
+      let!(:comment) { create_list(:comment, 2, :for_question, commentable: question).first }
+      let!(:link) { create_list(:link, 2, :for_question, linkable: question).first }
+
+      before { get api_path, params: { access_token: access_token }, headers: headers }
+
+      it { expect(response).to be_successful }
+
+      include_examples 'question api' do
+        let(:question_json) { json['question'] }
       end
     end
   end
