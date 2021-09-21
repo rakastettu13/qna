@@ -25,6 +25,7 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
+gem 'active_model_serializers', '~> 0.10'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'cancancan'
 gem 'cocoon'
@@ -32,6 +33,7 @@ gem 'devise'
 gem 'doorkeeper'
 gem 'gon'
 gem 'octokit', '~>4.0'
+gem 'oj'
 gem 'slim-rails'
 gem 'validate_url'
 
