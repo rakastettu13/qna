@@ -11,17 +11,3 @@ shared_examples_for 'API authorizable' do
     it { expect(response).to be_unauthorized }
   end
 end
-
-shared_examples 'user fields' do
-  it 'returns all public fields for user' do
-    %w[id email admin created_at updated_at].each do |attr|
-      expect(user_json[attr]).to eq user.send(attr).as_json
-    end
-  end
-
-  it 'does not return private fields for user' do
-    %w[password encrypted_password].each do |attr|
-      expect(user_json).not_to have_key(attr)
-    end
-  end
-end

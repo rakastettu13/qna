@@ -12,28 +12,25 @@ describe 'Questions API', type: :request do
     end
 
     context 'when access_token is valid' do
-      let(:questions) { create_list(:question_with_attachments, 2) }
+      let!(:question) { create_list(:question_with_associations, 2).first }
       let!(:answer) { create_list(:answer, 2, question: question).first }
-      let!(:comment) { create_list(:comment, 2, :for_question, commentable: question).first }
-      let!(:link) { create_list(:link, 2, :for_question, linkable: question).first }
 
       before { get api_path, params: { access_token: access_token }, headers: headers }
-
-      it { expect(response).to be_successful }
 
       it 'returns list of questions' do
         expect(json['questions'].size).to eq 2
       end
 
-      include_examples 'question api' do
-        let(:question) { questions.first }
-        let(:question_json) { json['questions'].first }
+      include_examples 'question fields' do
+        let(:resource) { question }
+        let(:resourse_json) { json['questions'].first }
+        let(:answer_json) { resourse_json['answers'].first }
       end
     end
   end
 
   describe 'GET /api/v1/questions/id' do
-    let(:question) { create(:question_with_attachments) }
+    let(:question) { create(:question_with_associations) }
     let(:api_path) { "/api/v1/questions/#{question.id}" }
 
     it_behaves_like 'API authorizable' do
@@ -42,15 +39,13 @@ describe 'Questions API', type: :request do
 
     context 'when access_token is valid' do
       let!(:answer) { create_list(:answer, 2, question: question).first }
-      let!(:comment) { create_list(:comment, 2, :for_question, commentable: question).first }
-      let!(:link) { create_list(:link, 2, :for_question, linkable: question).first }
 
       before { get api_path, params: { access_token: access_token }, headers: headers }
 
-      it { expect(response).to be_successful }
-
-      include_examples 'question api' do
-        let(:question_json) { json['question'] }
+      include_examples 'question fields' do
+        let(:resource) { question }
+        let(:resourse_json) { json['question'] }
+        let(:answer_json) { resourse_json['answers'].first }
       end
     end
   end
