@@ -5,7 +5,7 @@ RSpec.describe AnswersController, type: :controller do
 
   before { sign_in(user) }
 
-  include_examples 'voting', :answer
+  it_behaves_like 'Votable', :answer
 
   describe 'POST #create' do
     let(:question) { create(:question) }
@@ -27,11 +27,8 @@ RSpec.describe AnswersController, type: :controller do
       it { expect { request_for_creation }.not_to change(Answer, :count) }
       it { expect { request_for_creation }.not_to have_broadcasted_to("questions/#{question.id}") }
 
-      describe 'response' do
+      include_examples 'response', "Body can't be blank" do
         before { request_for_creation }
-
-        it { expect(response.header['Content-Type']).to include 'application/json' }
-        it { expect(response.body).to include "Body can't be blank" }
       end
     end
   end
@@ -53,10 +50,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it { expect { answer.reload }.not_to change(answer, :body) }
 
-      describe 'response' do
-        it { expect(response.header['Content-Type']).to include 'application/json' }
-        it { expect(response.body).to include "Body can't be blank" }
-      end
+      include_examples 'response', "Body can't be blank"
     end
 
     context 'when the user is not the author' do
@@ -89,15 +83,15 @@ RSpec.describe AnswersController, type: :controller do
     before { patch :best, params: { id: answer }, format: :js }
 
     context 'when the user is the author of question' do
-      let!(:question) { create(:question, author: user) }
-      let!(:answer) { create(:answer, question: question) }
+      let(:question) { create(:question, author: user) }
+      let(:answer) { create(:answer, question: question) }
 
       it { expect { answer.reload }.to change(answer, :best).from(false).to(true) }
       it { is_expected.to render_template :best }
     end
 
     context 'when the user is not the author of question' do
-      let!(:answer) { create(:answer) }
+      let(:answer) { create(:answer) }
 
       it { expect { answer.reload }.not_to change(answer, :best) }
     end

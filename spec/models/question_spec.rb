@@ -1,25 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Question, type: :model do
-  it { is_expected.to belong_to(:author).class_name('User') }
+  include_examples 'shared associations'
 
   it { is_expected.to have_one(:achievement).dependent(:destroy) }
   it { is_expected.to have_many(:answers).dependent(:destroy) }
-  it { is_expected.to have_many(:links).dependent(:destroy) }
-  it { is_expected.to have_many(:votes).dependent(:destroy) }
-  it { is_expected.to have_many(:comments).dependent(:destroy) }
-
-  it { is_expected.to validate_presence_of :title }
-  it { is_expected.to validate_presence_of :body }
-
-  it { is_expected.to accept_nested_attributes_for(:links).allow_destroy(true) }
   it { is_expected.to accept_nested_attributes_for(:achievement) }
+  it { is_expected.to validate_presence_of :title }
 
-  describe '#files' do
-    subject { described_class.new.files }
-
-    it { is_expected.to be_an_instance_of(ActiveStorage::Attached::Many) }
-  end
+  include_examples 'shared methods', :question, :question_with_votes
 
   describe '#best_answer' do
     subject { question.best_answer }

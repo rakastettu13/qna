@@ -1,4 +1,4 @@
-RSpec.shared_examples 'voting' do |votable|
+shared_examples_for 'Votable' do |votable|
   describe 'PATCH #change_rating' do
     subject(:change_rating) { patch :change_rating, params: { id: resource, point: 1 }, format: :json }
 

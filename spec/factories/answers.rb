@@ -20,6 +20,10 @@ FactoryBot.define do
       end
     end
 
+    factory :answer_with_attachments do
+      files { [Rack::Test::UploadedFile.new(Rails.root.join('README.md'))] }
+    end
+
     factory :answer_with_associations do
       files do
         [Rack::Test::UploadedFile.new(Rails.root.join('spec/rails_helper.rb')),

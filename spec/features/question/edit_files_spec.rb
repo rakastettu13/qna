@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.feature 'Only author of question can edit or delete the attached files.', type: :feature, js: true do
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
-  given(:question) { create(:question, author: user, files: find_file('README.md')) }
+  given(:question) { create(:question_with_attachments, author: user) }
 
   describe 'Author of question' do
     background { sign_in(user) }
