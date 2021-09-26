@@ -5,7 +5,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   before { sign_in(user) }
 
-  include_examples 'voting', :question
+  it_behaves_like 'Votable', :question
 
   describe 'GET #new' do
     before { get :new }
@@ -15,14 +15,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     it { is_expected.to render_template :new }
-  end
-
-  describe 'GET #show' do
-    let(:question) { create(:question) }
-
-    before { get :show, params: { id: question } }
-
-    it { is_expected.to render_template :show }
   end
 
   describe 'POST #create' do
@@ -64,10 +56,7 @@ RSpec.describe QuestionsController, type: :controller do
       it { expect { question.reload }.not_to change(question, :title) }
       it { expect { question.reload }.not_to change(question, :body) }
 
-      describe 'response' do
-        it { expect(response.header['Content-Type']).to include 'application/json' }
-        it { expect(response.body).to include "Title can't be blank" }
-      end
+      include_examples 'response', "Title can't be blank"
     end
 
     context 'when the user is not the author' do

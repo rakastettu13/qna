@@ -25,11 +25,8 @@ RSpec.describe CommentsController, type: :controller do
       it { expect { request_for_creation }.not_to change(resource.class, :count) }
       it { expect { request_for_creation }.not_to have_broadcasted_to("questions/#{resource.id}") }
 
-      describe 'response' do
+      include_examples 'response', "Body can't be blank" do
         before { request_for_creation }
-
-        it { expect(response.header['Content-Type']).to include 'application/json' }
-        it { expect(response.body).to include "Body can't be blank" }
       end
     end
   end

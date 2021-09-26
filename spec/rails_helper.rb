@@ -20,6 +20,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
+  config.include ApiHelpes, type: :request
 
   Capybara.javascript_driver = :selenium_headless
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

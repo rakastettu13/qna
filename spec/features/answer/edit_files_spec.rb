@@ -6,7 +6,7 @@ RSpec.feature 'Only author of answer can edit or delete the attached files.', ty
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
   given(:question) { create(:question, author: user) }
-  given!(:answer) { create(:answer, author: user, question: question, files: find_file('README.md')) }
+  given!(:answer) { create(:answer_with_attachments, author: user, question: question) }
 
   describe 'Author of answer', js: true do
     background { sign_in(user) }

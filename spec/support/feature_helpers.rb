@@ -5,8 +5,4 @@ module FeatureHelpers
     fill_in 'Password', with: user.password
     within('.actions') { click_on 'Log in' }
   end
-
-  def find_file(file_path)
-    [Rack::Test::UploadedFile.new(Rails.root.join(file_path))]
-  end
 end

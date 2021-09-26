@@ -4,7 +4,7 @@ RSpec.feature 'When the author of the question chooses the best answer, the auth
   let(:question) { create(:question) }
   let!(:answer) { create(:answer, question: question) }
   let!(:achievement) do
-    create(:achievement, question: question, image: find_file('spec/features/achievement/test_image.png').first)
+    create(:achievement, question: question)
   end
 
   scenario 'The author of the best answer gets an achievement', js: true do
