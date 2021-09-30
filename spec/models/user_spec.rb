@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   it { is_expected.to have_many(:questions).dependent(:destroy) }
   it { is_expected.to have_many(:answers).dependent(:destroy) }
+  it { is_expected.to have_many(:subscriptions).dependent(:destroy) }
+  it { is_expected.to have_many(:subscribed_to).through(:subscriptions) }
   it { is_expected.to have_many(:achievements) }
 
   describe '#author_of?' do

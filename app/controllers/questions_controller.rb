@@ -16,7 +16,9 @@ class QuestionsController < ApplicationController
     @question.author = current_user
 
     if @question.save
+      @question.subscribers.push(current_user)
       publish_question
+
       redirect_to @question, notice: 'Your question successfully created.'
     else
       render :new
