@@ -18,6 +18,10 @@
   p
     = link_to_delete(@question)
     =< link_to_edit(@question)
+  
+  .subscription
+    .errors
+    = subscription_links(@question, @subscription)
 
   .edit
     .errors

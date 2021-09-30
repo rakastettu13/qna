@@ -1,6 +1,7 @@
 import {FormHelper} from 'utilities/form_helper';
 import {showAll} from "utilities/links_handler.js";
 import {showAllFor} from "utilities/links_handler.js";
+import {hideAll} from "utilities/links_handler.js";
 
 $(document).on("turbolinks:load", () => {
   FormHelper.call($('.show-question, .answers'), 'edit')
@@ -20,5 +21,9 @@ $(document).on("turbolinks:load", () => {
 
   $(document).on('ajax:success', (event) => {
     $(event.target).find('textarea').val('')
+  })
+
+  $($('.subscription')[0]).on('ajax:success', (event) => {
+    $(event.target).replaceWith(event.detail[0])
   })
 });
