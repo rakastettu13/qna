@@ -16,7 +16,9 @@ class QuestionsController < ApplicationController
     @question.author = current_user
 
     if @question.save
+      @question.subscribers.push(current_user)
       publish_question
+
       redirect_to @question, notice: 'Your question successfully created.'
     else
       render :new
@@ -55,8 +57,12 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @comment = Comment.new
     @comments = @question.comments.includes(:author)
-    @answers = @question.answers.with_attached_files.includes(:author,
-                                                              :links,
-                                                              comments: :author)
+    @answers = @question.answers.with_attached_files
+                        .includes(:author, :links, comments: :author)
+    @subscription = set_subscription
+  end
+
+  def set_subscription
+    @question.subscriptions.find_by(user_id: current_user.id) || Subscription.new if current_user
   end
 end

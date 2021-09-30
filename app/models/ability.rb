@@ -20,6 +20,7 @@ class Ability
     can %i[update destroy], [Question, Answer], author_id: user.id
     can :destroy, ActiveStorage::Attachment, record: { author_id: user.id }
     can :best, Answer, question: { author_id: user.id }
+    can :destroy, Subscription, user_id: user.id
   end
 
   def ability_to_vote(user)

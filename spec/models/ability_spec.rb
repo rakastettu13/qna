@@ -6,6 +6,7 @@ RSpec.shared_examples 'create' do |verb|
   it { is_expected.send verb, be_able_to(:create, Question) }
   it { is_expected.send verb, be_able_to(:create, Answer) }
   it { is_expected.send verb, be_able_to(:create, Comment) }
+  it { is_expected.send verb, be_able_to(:create, Subscription) }
 end
 
 RSpec.describe Ability, type: :model do
@@ -18,12 +19,10 @@ RSpec.describe Ability, type: :model do
 
     it { is_expected.to be_able_to :read, :all }
     it { is_expected.not_to be_able_to :me, User }
-    it { is_expected.not_to be_able_to %i[create update destroy], Question }
-    it { is_expected.not_to be_able_to %i[create update destroy], Answer }
-    it { is_expected.not_to be_able_to %i[destroy], ActiveStorage::Attachment }
-    it { is_expected.not_to be_able_to :change_rating, Question }
-    it { is_expected.not_to be_able_to :change_rating, Answer }
-    it { is_expected.not_to be_able_to :best, Answer }
+    it { is_expected.not_to be_able_to :manage, Question }
+    it { is_expected.not_to be_able_to :manage, Answer }
+    it { is_expected.not_to be_able_to :manage, Subscription }
+    it { is_expected.not_to be_able_to :manage, ActiveStorage::Attachment }
   end
 
   describe 'for user' do
@@ -38,6 +37,7 @@ RSpec.describe Ability, type: :model do
     it { is_expected.not_to be_able_to :best, answer }
     it { is_expected.not_to be_able_to %i[update destroy], question }
     it { is_expected.not_to be_able_to %i[update destroy], answer }
+    it { is_expected.not_to be_able_to :destroy, create(:subscription) }
     it { is_expected.not_to be_able_to %i[destroy], create(:question_with_attachments).files.last }
 
     context 'when he did not vote' do
@@ -73,6 +73,7 @@ RSpec.describe Ability, type: :model do
     it { is_expected.not_to be_able_to :best, answer }
     it { is_expected.to be_able_to %i[update destroy], question }
     it { is_expected.to be_able_to %i[update destroy], answer }
+    it { is_expected.to be_able_to :destroy, create(:subscription, user: user) }
     it { is_expected.to be_able_to %i[destroy], attachment }
     it { is_expected.not_to be_able_to :change_rating, question }
     it { is_expected.not_to be_able_to :change_rating, answer }

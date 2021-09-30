@@ -34,8 +34,11 @@ gem 'doorkeeper'
 gem 'gon'
 gem 'octokit', '~>4.0'
 gem 'oj'
+gem 'sidekiq'
+gem 'sinatra', require: false
 gem 'slim-rails'
 gem 'validate_url'
+gem 'whenever', require: false
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]

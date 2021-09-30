@@ -10,6 +10,7 @@ class AnswersController < ApplicationController
     @answer.author = current_user
 
     if @answer.save
+      SubscriptionJob.perform_later(@answer)
       publish_answer
     else
       render json: @answer.errors.full_messages, status: :unprocessable_entity

@@ -24,6 +24,12 @@ RSpec.describe QuestionsController, type: :controller do
       it { expect { request_for_creation }.to change(Question, :count).by(1) }
       it { expect { request_for_creation }.to have_broadcasted_to('questions') }
       it { is_expected.to redirect_to assigns(:question) }
+
+      it 'subscribed current user on this question' do
+        request_for_creation
+
+        expect(assigns(:question).subscribers).to include user
+      end
     end
 
     context 'with invalid attributes' do
